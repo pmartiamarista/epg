@@ -28,6 +28,13 @@ export default defineConfig({
     minify: "esbuild",
     // Aggressive chunk splitting for optimal caching
     rollupOptions: {
+      // Externalize dev dependencies in production
+      external: (id) => {
+        if (process.env.NODE_ENV === "production") {
+          return id.includes("@tanstack/react-router-devtools");
+        }
+        return false;
+      },
       output: {
         manualChunks: {
           // Core React libraries
@@ -38,6 +45,8 @@ export default defineConfig({
           query: ["@tanstack/react-query"],
           // Validation library
           validation: ["zod"],
+          // Utility libraries
+          utils: ["tailwind-merge"],
         },
         // Optimize chunk file names for better caching
         chunkFileNames: "assets/[name]-[hash].js",
@@ -86,6 +95,10 @@ export default defineConfig({
     exclude: ["@tanstack/react-router-devtools"],
     // Force optimization for better performance
     force: true,
+    // Disable esbuild optimization for better compatibility
+    esbuildOptions: {
+      target: "esnext",
+    },
   },
   // CSS optimizations
   css: {
