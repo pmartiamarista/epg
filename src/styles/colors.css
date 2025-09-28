@@ -1,0 +1,60 @@
+/* Colors - Dark GitHub Theme */
+:root {
+  /* Background Colors */
+  --bg-primary: #0d1117;
+  --bg-secondary: #161b22;
+  --bg-tertiary: #21262d;
+  --bg-hover: #30363d;
+  --bg-active: #1f6feb;
+
+  /* Text Colors */
+  --text-primary: #f0f6fc;
+  --text-secondary: #8b949e;
+  --text-tertiary: #6e7681;
+  --text-disabled: #484f58;
+  --text-link: #58a6ff;
+  --text-link-hover: #79c0ff;
+
+  /* Border Colors */
+  --border-primary: #30363d;
+  --border-secondary: #21262d;
+  --border-focus: #1f6feb;
+  --border-success: #238636;
+  --border-warning: #d29922;
+  --border-error: #da3633;
+
+  /* Accent Colors */
+  --accent-blue: #1f6feb;
+  --accent-blue-hover: #388bfd;
+  --accent-green: #238636;
+  --accent-green-hover: #2ea043;
+  --accent-yellow: #d29922;
+  --accent-yellow-hover: #e3b341;
+  --accent-red: #da3633;
+  --accent-red-hover: #f85149;
+  --accent-orange: #bf8700;
+  --accent-orange-hover: #d29922;
+  --accent-purple: #8957e5;
+  --accent-purple-hover: #a367e5;
+
+  /* Status Colors */
+  --success: #238636;
+  --success-bg: #1a472a;
+  --warning: #d29922;
+  --warning-bg: #3d2914;
+  --error: #da3633;
+  --error-bg: #3d1f1f;
+  --info: #1f6feb;
+  --info-bg: #1c2a3a;
+
+  /* Interactive States */
+  --hover-overlay: rgba(240, 246, 252, 0.1);
+  --active-overlay: rgba(240, 246, 252, 0.2);
+  --focus-ring: 0 0 0 2px rgba(31, 111, 235, 0.3);
+
+  /* Shadows */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.5);
+  --shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.6);
+}

@@ -1,0 +1,22 @@
+<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- TV Screen -->
+  <rect x="4" y="6" width="24" height="18" rx="2" fill="#0ea5e9" stroke="#0284c7" stroke-width="1.5"/>
+  
+  <!-- Screen Content -->
+  <rect x="6" y="8" width="20" height="14" rx="1" fill="#1e293b"/>
+  
+  <!-- Channel Lines -->
+  <rect x="8" y="10" width="16" height="1" fill="#64748b"/>
+  <rect x="8" y="12" width="12" height="1" fill="#64748b"/>
+  <rect x="8" y="14" width="14" height="1" fill="#64748b"/>
+  
+  <!-- Time Indicator -->
+  <rect x="8" y="16" width="8" height="1" fill="#ffd700"/>
+  
+  <!-- TV Stand -->
+  <rect x="12" y="24" width="8" height="2" fill="#475569"/>
+  <rect x="14" y="26" width="4" height="2" fill="#334155"/>
+  
+  <!-- Antenna -->
+  <path d="M16 6 L16 2 M14 4 L18 4" stroke="#64748b" stroke-width="1.5" stroke-linecap="round"/>
+</svg>

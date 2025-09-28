@@ -1,0 +1,95 @@
+/* Primary Gradients */
+.bg-gradient-primary {
+  background: linear-gradient(
+    135deg,
+    var(--accent-blue) 0%,
+    var(--accent-purple) 100%
+  );
+}
+
+.bg-gradient-primary-light {
+  background: linear-gradient(
+    135deg,
+    var(--accent-blue-hover) 0%,
+    var(--accent-purple-hover) 100%
+  );
+}
+
+.bg-gradient-primary-dark {
+  background: linear-gradient(135deg, #0d4f8c 0%, #5a2d8a 100%);
+}
+
+/* Gray Gradients */
+.bg-gradient-gray {
+  background: linear-gradient(
+    135deg,
+    var(--bg-secondary) 0%,
+    var(--bg-tertiary) 100%
+  );
+}
+
+.bg-gradient-gray-light {
+  background: linear-gradient(
+    135deg,
+    var(--bg-hover) 0%,
+    var(--bg-secondary) 100%
+  );
+}
+
+.bg-gradient-gray-dark {
+  background: linear-gradient(
+    135deg,
+    var(--bg-primary) 0%,
+    var(--bg-secondary) 100%
+  );
+}
+
+/* Dark Gradients */
+.bg-gradient-dark {
+  background: linear-gradient(135deg, var(--bg-primary) 0%, #000000 100%);
+}
+
+.bg-gradient-dark-light {
+  background: linear-gradient(
+    135deg,
+    var(--bg-secondary) 0%,
+    var(--bg-primary) 100%
+  );
+}
+
+.bg-gradient-dark-dark {
+  background: linear-gradient(135deg, #000000 0%, var(--bg-primary) 100%);
+}
+
+/* Accent Gradients */
+.bg-gradient-accent-green {
+  background: linear-gradient(
+    135deg,
+    var(--accent-green) 0%,
+    var(--accent-green-hover) 100%
+  );
+}
+
+.bg-gradient-accent-red {
+  background: linear-gradient(
+    135deg,
+    var(--accent-red) 0%,
+    var(--accent-red-hover) 100%
+  );
+}
+
+.bg-gradient-accent-orange {
+  background: linear-gradient(
+    135deg,
+    var(--accent-orange) 0%,
+    var(--accent-orange-hover) 100%
+  );
+}
+
+.bg-gradient-accent-yellow {
+  background: linear-gradient(
+    135deg,
+    var(--accent-yellow) 0%,
+    var(--accent-yellow-hover) 100%
+  );
+}
