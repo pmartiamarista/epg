@@ -1,17 +1,18 @@
 import { createFileRoute } from "@tanstack/react-router";
 
-import DesignSystemExample from "@/components/examples/DesignSystemExample";
+import EpgViewer from "@/components/epg/EpgViewer";
 
 import { epgQueries } from "@/api/epg-service/epg-queries";
 
 const EPGPage = () => {
-  return <DesignSystemExample />;
+  const channels = Route.useLoaderData();
+  return <EpgViewer channels={channels} />;
 };
 
 export const Route = createFileRoute("/")({
   component: EPGPage,
-  loader: ({ context }) => {
-    void context.queryClient.ensureQueryData(epgQueries.getEpgData());
+  loader: async ({ context }) => {
+    return context.queryClient.ensureQueryData(epgQueries.getEpgData());
   },
   head: () => ({
     meta: [

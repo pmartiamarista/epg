@@ -29,7 +29,7 @@ export default defineConfig({
     // Aggressive chunk splitting for optimal caching
     rollupOptions: {
       // Externalize dev dependencies in production
-      external: (id) => {
+      external: id => {
         if (process.env.NODE_ENV === "production") {
           return id.includes("@tanstack/react-router-devtools");
         }
@@ -43,10 +43,12 @@ export default defineConfig({
           router: ["@tanstack/react-router"],
           // Query functionality
           query: ["@tanstack/react-query"],
+          // Virtualization
+          virtual: ["@tanstack/react-virtual"],
           // Validation library
           validation: ["zod"],
           // Utility libraries
-          utils: ["tailwind-merge"],
+          utils: ["tailwind-merge", "clsx"],
         },
         // Optimize chunk file names for better caching
         chunkFileNames: "assets/[name]-[hash].js",
@@ -78,6 +80,12 @@ export default defineConfig({
     cors: true,
     // Set host for network access
     host: true,
+    // Enable compression for faster dev server
+    middlewareMode: false,
+    // Optimize dev server performance
+    fs: {
+      strict: false,
+    },
   },
   // Dependency optimization
   optimizeDeps: {
@@ -87,6 +95,7 @@ export default defineConfig({
       "react-dom",
       "@tanstack/react-router",
       "@tanstack/react-query",
+      "@tanstack/react-virtual",
       "zod",
       "clsx",
       "tailwind-merge",
@@ -95,9 +104,15 @@ export default defineConfig({
     exclude: ["@tanstack/react-router-devtools"],
     // Force optimization for better performance
     force: true,
-    // Disable esbuild optimization for better compatibility
+    // Optimize esbuild for better performance
     esbuildOptions: {
       target: "esnext",
+      // Enable tree shaking
+      treeShaking: true,
+      // Optimize for modern browsers
+      supported: {
+        "top-level-await": true,
+      },
     },
   },
   // CSS optimizations

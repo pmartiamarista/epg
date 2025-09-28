@@ -29,7 +29,7 @@ export interface ChannelImages {
  * Program Schedule Item
  * Represents a single program in the EPG schedule
  */
-export interface ProgramSchedule {
+export interface ProgramSchedule extends BaseEntity {
   /** Program title */
   title: string;
   /** Program start time (Unix timestamp in milliseconds) */
