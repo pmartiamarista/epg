@@ -1,5 +1,7 @@
 import React, { type FC, memo } from "react";
 
+import Body from "@/components/typography/body/Body";
+
 import Card from "../../card/Card";
 
 import type { EpgGridCell } from "@/types/egp.types";
@@ -11,12 +13,12 @@ interface EpgChannelTileProps
 const EpgChannelTile: FC<EpgChannelTileProps> = ({ channel, ...props }) => {
   return (
     <Card
-      className="sticky left-0 z-20 flex items-center justify-center"
+      className="bg-bg-secondary sticky left-0 z-20 flex items-center justify-center p-1 shrink-0 grow-0 border border-border-primary"
       {...props}
     >
-      <span className="font-bold text-sm sm:text-base truncate">
+      <Body className="truncate" weight="bold" size="sm">
         {channel.title}
-      </span>
+      </Body>
     </Card>
   );
 };

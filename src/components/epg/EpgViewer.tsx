@@ -1,5 +1,5 @@
 import { useVirtualizer } from "@tanstack/react-virtual";
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useLayoutEffect, useMemo, useRef, useState } from "react";
 
 import { now } from "@/utils/time/now/now";
 
@@ -10,49 +10,32 @@ import type { EpgChannel } from "@/types/egp.types";
 
 const LAYOUT_CONFIG = {
   mobile: {
-    hourWidth: 120, // Width for a full hour, each 30-min block is half
-    rowHeight: 64, // Increased vertical space for "pill" style
+    hourWidth: 120,
+    rowHeight: 64,
     channelColumnWidth: 96,
-    visibleHours: 2, // Show 2 hours on mobile
   },
   tablet: {
     hourWidth: 160,
     rowHeight: 68,
     channelColumnWidth: 128,
-    visibleHours: 1, // Show 1 hour on tablet
   },
   desktop: {
     hourWidth: 200,
     rowHeight: 72,
     channelColumnWidth: 160,
-    visibleHours: 3, // Show 3 hours on desktop
   },
 };
+
 const TABLET_BREAKPOINT = 768;
 const DESKTOP_BREAKPOINT = 1024;
 
 type EPGProps = { channels: EpgChannel[] };
 
 const EpgViewer: React.FC<EPGProps> = ({ channels }) => {
-  const [layout, setLayout] = useState(LAYOUT_CONFIG.mobile);
   const [selectedProgram, setSelectedProgram] = useState<string | null>(null);
 
   const containerRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const checkSize = () => {
-      if (window.innerWidth >= DESKTOP_BREAKPOINT) {
-        setLayout(LAYOUT_CONFIG.desktop);
-      } else if (window.innerWidth >= TABLET_BREAKPOINT) {
-        setLayout(LAYOUT_CONFIG.tablet);
-      } else {
-        setLayout(LAYOUT_CONFIG.mobile);
-      }
-    };
-    checkSize();
-    window.addEventListener("resize", checkSize);
-    return () => window.removeEventListener("resize", checkSize);
-  }, []);
+  const layoutRef = useRef(LAYOUT_CONFIG.mobile);
 
   // Calculate global earliest start time across all channels
   const globalEarliestStart = useMemo(() => {
@@ -84,7 +67,8 @@ const EpgViewer: React.FC<EPGProps> = ({ channels }) => {
 
     const totalMinutes = (latestEnd - globalEarliestStart) / 60000;
     return Math.max(
-      (totalMinutes / 60) * layout.hourWidth + layout.channelColumnWidth,
+      (totalMinutes / 60) * layoutRef.current.hourWidth +
+        layoutRef.current.channelColumnWidth,
       400
     );
   };
@@ -92,7 +76,6 @@ const EpgViewer: React.FC<EPGProps> = ({ channels }) => {
   const handleProgramSelect = (programId: string) => {
     setSelectedProgram(programId);
 
-    // Auto-scroll to the beginning of the selected program
     const programElement = document.querySelector(
       `[data-program-id="${programId}"]`
     );
@@ -100,16 +83,18 @@ const EpgViewer: React.FC<EPGProps> = ({ channels }) => {
       const rect = programElement.getBoundingClientRect();
       const containerRect = containerRef.current.getBoundingClientRect();
 
-      // Calculate scroll position accounting for channel tile width
-      // Program should align with the start of the timeline area (after channel column)
       const scrollLeft =
         containerRef.current.scrollLeft +
         rect.left -
         containerRect.left -
-        layout.channelColumnWidth;
+        layoutRef.current.channelColumnWidth;
+
+      const scrollTop =
+        containerRef.current.scrollTop + rect.top - containerRect.top;
 
       containerRef.current.scrollTo({
         left: Math.max(0, scrollLeft),
+        top: Math.max(0, scrollTop),
         behavior: "smooth",
       });
     }
@@ -118,15 +103,30 @@ const EpgViewer: React.FC<EPGProps> = ({ channels }) => {
   const rowVirtualizer = useVirtualizer({
     count: channels.length,
     getScrollElement: () => containerRef.current,
-    estimateSize: () => layout.rowHeight,
+    estimateSize: () => layoutRef.current.rowHeight,
     overscan: 4,
   });
 
+  useLayoutEffect(() => {
+    const checkSize = () => {
+      if (window.innerWidth >= DESKTOP_BREAKPOINT) {
+        layoutRef.current = LAYOUT_CONFIG.desktop;
+      } else if (window.innerWidth >= TABLET_BREAKPOINT) {
+        layoutRef.current = LAYOUT_CONFIG.tablet;
+      } else {
+        layoutRef.current = LAYOUT_CONFIG.mobile;
+      }
+    };
+    checkSize();
+    window.addEventListener("resize", checkSize);
+    return () => window.removeEventListener("resize", checkSize);
+  }, []);
+
   return (
-    <div className="h-screen w-screen flex flex-col bg-gray-900 text-gray-200 font-sans select-none">
+    <div className="h-screen w-screen flex flex-col  text-text-primary font-sans select-none">
       <div
         ref={containerRef}
-        className="flex-1 overflow-auto relative scrollbar-hide"
+        className="flex-1 overflow-auto relative scrollbar-hide "
       >
         <div
           className="relative"
@@ -141,7 +141,7 @@ const EpgViewer: React.FC<EPGProps> = ({ channels }) => {
             return (
               <div
                 key={virtualRow.key}
-                className="flex absolute top-0 left-0 gap-2 py-1"
+                className="flex absolute top-0 left-0 gap-2 bg-bg-primary"
                 style={{
                   height: `${virtualRow.size}px`,
                   transform: `translateY(${virtualRow.start}px)`,
@@ -150,12 +150,12 @@ const EpgViewer: React.FC<EPGProps> = ({ channels }) => {
               >
                 <EpgChannelTile
                   channel={channel}
-                  style={{ width: `${layout.channelColumnWidth}px` }}
+                  style={{ width: `${layoutRef.current.channelColumnWidth}px` }}
                 />
                 <div className="w-full">
                   <EpgChannelTimeline
                     schedules={channel.schedules}
-                    hourWidth={layout.hourWidth}
+                    hourWidth={layoutRef.current.hourWidth}
                     selectedProgram={selectedProgram}
                     globalEarliestStart={globalEarliestStart}
                     onClick={handleProgramSelect}

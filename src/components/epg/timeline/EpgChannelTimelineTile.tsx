@@ -8,6 +8,8 @@ import React, {
 } from "react";
 import { twMerge } from "tailwind-merge";
 
+import Body from "@/components/typography/body/Body";
+
 import { formatTime } from "@/utils/time/formatTime/formatTime";
 
 import Card from "../../card/Card";
@@ -38,13 +40,11 @@ const EpgChannelTimelineTile: FC<EpgChannelTimelineTileProps> = ({
 
   const currentClassName = twMerge(
     "h-full",
-    "absolute top-0 left-0 flex items-center rounded-lg transition-all duration-200",
-    "cursor-pointer overflow-hidden",
-    isPlaying
-      ? "bg-gradient-to-r from-blue-500 to-purple-500 shadow-lg z-10"
-      : isSelected
-        ? "bg-blue-600 hover:bg-blue-500 z-10"
-        : "bg-gray-700 hover:bg-gray-600",
+    "absolute top-0 left-0 flex items-center transition-all duration-200",
+    "cursor-pointer overflow-hidden border border-border-primary hover:bg-bg-hover",
+    "bg-bg-primary",
+    isPlaying && "bg-bg-tertiary shadow-lg z-10",
+    isSelected && "bg-bg-tertiary z-10",
     className
   );
 
@@ -71,7 +71,7 @@ const EpgChannelTimelineTile: FC<EpgChannelTimelineTileProps> = ({
 
     if (timeRef.current) {
       timeRef.current.className = twMerge(
-        "text-gray-400 text-xs min-w-0",
+        "text-text-secondary text-xs font-semibold min-w-0",
         shouldAnimate && isTimeNarrowRef.current
           ? "animate-marquee whitespace-nowrap"
           : "truncate"
@@ -115,7 +115,7 @@ const EpgChannelTimelineTile: FC<EpgChannelTimelineTileProps> = ({
     <Card
       ref={cardRef}
       style={style}
-      className={`${currentClassName} p-0`}
+      className={twMerge("p-0 shrink-0 grow-0", currentClassName)}
       onMouseEnter={() => {
         isHoveredRef.current = true;
         updateAnimation();
@@ -126,19 +126,14 @@ const EpgChannelTimelineTile: FC<EpgChannelTimelineTileProps> = ({
       }}
       {...props}
     >
-      <div className="flex flex-col min-w-0 w-full h-full px-1 py-2 justify-center gap-0.5 relative">
+      <div className="flex flex-col min-w-0 w-full h-full px-1 py-2 justify-center gap-0.5 relative truncate">
         <div className="overflow-hidden">
-          <p
-            ref={titleRef}
-            className="text-white text-sm font-semibold truncate min-w-0"
-          >
-            {program.title}
-          </p>
+          <Body ref={titleRef}>{program.title}</Body>
         </div>
         <div className="overflow-hidden">
-          <p ref={timeRef} className="text-gray-400 text-xs truncate min-w-0">
+          <Body ref={timeRef}>
             {startTimeFormatted} - {endTimeFormatted}
-          </p>
+          </Body>
         </div>
       </div>
     </Card>
