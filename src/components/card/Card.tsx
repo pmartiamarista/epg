@@ -3,14 +3,16 @@ import { twMerge } from "tailwind-merge";
 
 type CardProps = React.HTMLAttributes<HTMLDivElement>;
 
-const Card: React.FC<CardProps> = ({ children, className = "", ...props }) => {
-  const styles = twMerge("bg-gray-800 rounded-lg p-4", className);
+const Card = React.forwardRef<HTMLDivElement, CardProps>(
+  ({ children, className = "", ...props }, ref) => {
+    const styles = twMerge("bg-gray-800 rounded-lg p-4", className);
 
-  return (
-    <div className={styles} {...props}>
-      {children}
-    </div>
-  );
-};
+    return (
+      <div ref={ref} className={styles} {...props}>
+        {children}
+      </div>
+    );
+  }
+);
 
 export default Card;

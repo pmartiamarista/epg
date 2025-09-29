@@ -14,10 +14,10 @@ export const epgQueryKeys = {
 export const epgQueryFunctions = {
   getEpgData: async (): Promise<EpgResponse> => {
     const result = await epgService.getEpgData();
-    if (result.error) {
-      throw new Error(result.error.message || "Failed to fetch EPG data");
+    if (!result.error) {
+      return result.data!;
     }
-    return result.data!;
+    return Promise.reject(result.error);
   },
 } as const;
 

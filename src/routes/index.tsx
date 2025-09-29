@@ -1,3 +1,4 @@
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 
 import EpgViewer from "@/components/epg/EpgViewer";
@@ -5,14 +6,14 @@ import EpgViewer from "@/components/epg/EpgViewer";
 import { epgQueries } from "@/api/epg-service/epg-queries";
 
 const EPGPage = () => {
-  const channels = Route.useLoaderData();
+  const { data: channels } = useSuspenseQuery(epgQueries.getEpgData());
   return <EpgViewer channels={channels} />;
 };
 
 export const Route = createFileRoute("/")({
   component: EPGPage,
-  loader: async ({ context }) => {
-    return context.queryClient.ensureQueryData(epgQueries.getEpgData());
+  loader: async ({ context: { queryClient } }) => {
+    return queryClient.ensureQueryData(epgQueries.getEpgData());
   },
   head: () => ({
     meta: [

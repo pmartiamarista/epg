@@ -1,49 +1,53 @@
 import { memo } from "react";
 
+import now from "@/utils/time/now/now";
+
 import EpgChannelTimelineTile from "./EpgChannelTimelineTile";
 
-import type { EpgChannel, ProgramSchedule } from "@/types/egp.types";
+import type { EpgChannel } from "@/types/egp.types";
 
 interface EpgChannelTimelineProps extends Pick<EpgChannel, "schedules"> {
-  dayStartTimestamp: number;
   hourWidth: number;
-  now: Date;
-  onClick: (program: ProgramSchedule) => void;
+  selectedProgram?: string | null;
+  globalEarliestStart: number;
+  onClick: (programId: string) => void;
 }
 
 const EpgChannelTimeline = memo<EpgChannelTimelineProps>(
-  ({ schedules, dayStartTimestamp, hourWidth, now, onClick }) => {
+  ({ schedules, hourWidth, selectedProgram, globalEarliestStart, onClick }) => {
+    const nowDate = now().toDate();
+
+    // Calculate timeline width based on this channel's programs
+    const latestEnd =
+      schedules.length > 0
+        ? Math.max(...schedules.map(p => new Date(p.end).getTime()))
+        : globalEarliestStart;
+
+    const totalMinutes = (latestEnd - globalEarliestStart) / 60000;
+    const timelineWidth = Math.max((totalMinutes / 60) * hourWidth, 200);
+
     return (
-      <div className="relative h-full">
+      <div className="relative h-full" style={{ width: `${timelineWidth}px` }}>
         {schedules.map(program => {
           const start = new Date(program.start);
           const end = new Date(program.end);
-          const isPlaying = now >= start && now < end;
-          const offsetMinutes = (start.getTime() - dayStartTimestamp) / 60000;
+          const isPlaying = nowDate >= start && nowDate < end;
+          const offsetMinutes = (start.getTime() - globalEarliestStart) / 60000;
           const durationMinutes = (end.getTime() - start.getTime()) / 60000;
           const pixelWidth = (durationMinutes / 60) * hourWidth;
-
-          let progressPercentage = 0;
-          let minutesLeft = 0;
-          if (isPlaying) {
-            const totalDuration = end.getTime() - start.getTime();
-            const elapsed = now.getTime() - start.getTime();
-            progressPercentage = (elapsed / totalDuration) * 100;
-            minutesLeft = Math.ceil((end.getTime() - now.getTime()) / 60000);
-          }
 
           return (
             <EpgChannelTimelineTile
               key={program.id}
               program={program}
               isPlaying={isPlaying}
-              minutesLeft={minutesLeft}
-              progressPercentage={progressPercentage}
+              isSelected={selectedProgram === program.id}
               style={{
                 left: `${(offsetMinutes / 60) * hourWidth}px`,
                 width: `${pixelWidth}px`,
               }}
-              onClick={() => onClick(program)}
+              data-program-id={program.id}
+              onClick={() => onClick(program.id)}
             />
           );
         })}

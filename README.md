@@ -1,28 +1,46 @@
-# EPG App
+# EPG (Electronic Program Guide) 📺
 
-React EPG (Electronic Program Guide) application built with modern web technologies and a comprehensive design system.
+A modern, responsive Electronic Program Guide built with React 19 and TypeScript, featuring virtualized scrolling, interactive program selection, and a comprehensive design system.
 
-## Tech Stack
+## ✨ Features
+
+### 📺 EPG Viewer
+
+- **Virtualized Channel List** - Smooth scrolling through unlimited channels
+- **Timeline Navigation** - Horizontal scrolling with 30-minute intervals
+- **Program Selection** - Click to select programs with visual feedback
+- **Auto-scroll to Selected** - Automatically scrolls to show selected programs
+- **Responsive Design** - Adapts to mobile and desktop viewports
+- **Keyboard Navigation** - Full keyboard support with spatial navigation
+
+### 🎨 Program Tiles
+
+- **Dynamic Sizing** - Program duration determines tile width
+- **Smart Text Handling** - Automatic text truncation with scrolling animation for both titles and time displays
+- **Overflow Detection** - Intelligent detection when text doesn't fit in narrow tiles
+- **Visual States** - Different styles for playing, selected, and normal states
+- **Hidden Scrollbars** - Clean interface without visible scrollbars
+- **Hover & Selection Effects** - Interactive feedback with marquee animation triggers
+
+### ⚡ Performance
+
+- **Virtual Scrolling** - Only renders visible channels for optimal performance
+- **Optimized Animations** - Hardware-accelerated CSS animations
+- **Efficient Re-renders** - Smart memoization and ref usage
+- **Layout Effects** - Synchronous DOM measurements for smooth UX
+
+## 🛠 Tech Stack
 
 - **React 19** - Latest React with concurrent features
-- **TypeScript** - Type-safe development
-- **Vite** - Fast build tool and dev server
-- **TanStack Router** - Type-safe routing
-- **TanStack Query** - Server state management
+- **TypeScript** - Full type safety throughout the application
+- **Vite** - Lightning-fast build tool and dev server
+- **TanStack Router** - Type-safe file-based routing
+- **TanStack Query** - Powerful server state management
+- **TanStack Virtual** - High-performance virtual scrolling
 - **Tailwind CSS v4** - Utility-first CSS framework
-- **Zod** - Schema validation
-- **Vitest** - Fast unit testing
-- **ESLint** - Code linting
-- **Prettier** - Code formatting
-
-## Features
-
-- 🎨 **Design System** - Comprehensive typography and component system
-- 🧪 **Testing** - Full test coverage with Vitest and Testing Library
-- 📱 **Responsive** - Mobile-first responsive design
-- ♿ **Accessible** - WCAG compliant components
-- 🚀 **Performance** - Optimized builds and lazy loading
-- 🔧 **Developer Experience** - Hot reload, type checking, and linting
+- **Day.js** - Lightweight date manipulation
+- **Zod** - Runtime type validation
+- **Norigin Spatial Navigation** - TV-style keyboard navigation
 
 ## Typography System
 
@@ -68,30 +86,67 @@ npm run build
 npm run preview
 ```
 
-## Project Structure
+## 📁 Project Structure
 
 ```
 src/
 ├── components/
-│   ├── typography/          # Typography components
-│   │   ├── body/           # Body text component
-│   │   └── heading/        # Heading component
-│   └── examples/           # Design system examples
-├── styles/                 # CSS files
-│   ├── base.css           # Base styles and resets
-│   ├── typography.css     # Typography classes
-│   ├── colors.css         # Color variables
-│   └── theme.css          # Theme configuration
-├── api/                   # API client and services
-├── constants/             # App constants
-├── routes/                # TanStack Router routes
-├── types/                 # TypeScript type definitions
-└── utils/                 # Utility functions
+│   ├── epg/                      # EPG-specific components
+│   │   ├── EpgViewer.tsx        # Main EPG container with virtualization
+│   │   └── timeline/            # Timeline-related components
+│   │       ├── EpgChannelTile.tsx        # Channel information tile
+│   │       ├── EpgChannelTimeline.tsx    # Channel's program timeline
+│   │       └── EpgChannelTimelineTile.tsx # Individual program tile
+│   ├── typography/              # Design system typography
+│   │   ├── body/               # Body text components
+│   │   └── heading/            # Heading components
+│   ├── card/                   # Reusable card component
+│   └── examples/               # Design system showcase
+├── api/                        # API layer
+│   ├── api-client/            # HTTP client configuration
+│   └── epg-service/           # EPG-specific API services
+├── utils/
+│   └── time/                   # Time utility functions
+│       ├── formatTime/         # Time formatting utilities
+│       ├── now/               # Current time helpers
+│       ├── isToday/           # Date comparison utilities
+│       └── getTimeRemaining/   # Time calculation utilities
+├── styles/                     # Global styles
+│   ├── base.css               # Base styles and animations
+│   ├── colors.css             # Color system
+│   ├── typography.css         # Typography classes
+│   └── theme.css              # Theme configuration
+├── routes/                     # File-based routing
+├── types/                      # TypeScript definitions
+└── constants/                  # App-wide constants
 ```
 
-## Testing
+## 🎮 EPG Key Features
 
-The project includes comprehensive tests for all typography components:
+### Smart Program Tiles
+
+- **Overflow Detection** - Automatically detects when text doesn't fit (titles & time displays)
+- **Dual Scrolling Animation** - Smooth marquee animation for both program titles and time text
+- **Intelligent Triggers** - Animation activates on hover or program selection
+- **State-aware Styling** - Visual feedback for playing, selected, and normal states
+- **Responsive Sizing** - Tiles adjust width based on program duration
+- **Performance Optimized** - Uses refs and layout effects for smooth animations
+
+### Time Management
+
+- **Global Timeline Sync** - All channels share the same time reference
+- **30-minute Intervals** - Timeline broken into half-hour segments
+- **Current Time Indicator** - Visual marker showing the current time
+- **Smart Time Calculations** - Accurate program positioning and duration
+
+### Navigation & Interaction
+
+- **Click Selection** - Select programs with visual feedback
+- **Auto-scroll** - Automatically scroll to show selected programs
+- **Keyboard Support** - Navigate with arrow keys (TV-style navigation)
+- **Touch-friendly** - Optimized for mobile touch interactions
+
+## 🧪 Testing
 
 ```bash
 # Run all tests
@@ -102,11 +157,27 @@ npm run test:coverage
 
 # Run tests in watch mode
 npm run test -- --watch
+
+# Run test UI
+npm run test:ui
 ```
 
-## Contributing
+## 🚀 Performance Optimizations
 
-1. Follow the existing code style
-2. Write tests for new components
-3. Ensure all tests pass
-4. Run linting and formatting before committing
+- **Virtual Scrolling** - Only renders visible channels with TanStack Virtual
+- **Memoized Components** - Prevents unnecessary re-renders with React.memo
+- **useLayoutEffect** - Synchronous DOM measurements for smooth animations
+- **CSS Animations** - Hardware-accelerated marquee transforms
+- **Ref-based State** - Uses refs instead of useState for animation state
+- **Hidden Scrollbars** - Clean UI without scrollbar performance impact
+- **Efficient Time Calculations** - Cached and memoized Day.js utilities
+
+## 🎨 Design System
+
+The app features a comprehensive design system with:
+
+- **Typography Components** - Semantic heading and body text
+- **Color System** - Consistent dark theme with accent colors
+- **Gradient System** - Smooth visual transitions
+- **Component Variants** - Flexible, reusable components
+- **Accessibility** - WCAG compliant with proper focus management
