@@ -7,10 +7,12 @@ A modern, responsive Electronic Program Guide built with React 19 and TypeScript
 ### 📺 EPG Viewer
 
 - **Virtualized Channel List** - Smooth scrolling through unlimited channels
-- **Timeline Navigation** - Horizontal scrolling with 30-minute intervals
+- **Timeline Navigation** - Horizontal scrolling with hour intervals
+- **Time Header** - Dynamic hour markers that update with scroll position
+- **Now Button** - Jump to current time with smart centering
 - **Program Selection** - Click to select programs with visual feedback
 - **Auto-scroll to Selected** - Automatically scrolls to show selected programs
-- **Responsive Design** - Adapts to mobile and desktop viewports
+- **Responsive Design** - Adapts to mobile, tablet, and desktop viewports
 - **Keyboard Navigation** - Full keyboard support with spatial navigation
 
 ### 🎨 Program Tiles
@@ -93,6 +95,10 @@ src/
 ├── components/
 │   ├── epg/                      # EPG-specific components
 │   │   ├── EpgViewer.tsx        # Main EPG container with virtualization
+│   │   ├── NowButton.tsx        # Jump to current time button
+│   │   ├── header/              # Time header components
+│   │   │   ├── EpgTimeHeader.tsx    # Dynamic hour markers
+│   │   │   └── TimeInterval.tsx     # Individual hour interval
 │   │   └── timeline/            # Timeline-related components
 │   │       ├── EpgChannelTile.tsx        # Channel information tile
 │   │       ├── EpgChannelTimeline.tsx    # Channel's program timeline
@@ -105,12 +111,18 @@ src/
 ├── api/                        # API layer
 │   ├── api-client/            # HTTP client configuration
 │   └── epg-service/           # EPG-specific API services
+├── hooks/                      # Custom React hooks
+│   └── useScrollPosition.ts   # Scroll position tracking
 ├── utils/
 │   └── time/                   # Time utility functions
 │       ├── formatTime/         # Time formatting utilities
 │       ├── now/               # Current time helpers
 │       ├── isToday/           # Date comparison utilities
-│       └── getTimeRemaining/   # Time calculation utilities
+│       ├── isBetweenDates/    # Date range checking utilities
+│       ├── getCurrentDay/     # Current day calculation
+│       ├── calculateTimelineWidth/ # Timeline width calculation
+│       ├── calculateVisibleHours/ # Visible hour calculation
+│       └── fixOvernightSchedules/ # Overnight schedule correction
 ├── styles/                     # Global styles
 │   ├── base.css               # Base styles and animations
 │   ├── colors.css             # Color system
@@ -119,6 +131,8 @@ src/
 ├── routes/                     # File-based routing
 ├── types/                      # TypeScript definitions
 └── constants/                  # App-wide constants
+│   ├── layout.ts              # Responsive layout configuration
+│   └── dayjs/                 # Day.js configuration
 ```
 
 ## 🎮 EPG Key Features
@@ -135,14 +149,19 @@ src/
 ### Time Management
 
 - **Global Timeline Sync** - All channels share the same time reference
-- **30-minute Intervals** - Timeline broken into half-hour segments
+- **Hour Intervals** - Timeline broken into hour segments with dynamic header
 - **Current Time Indicator** - Visual marker showing the current time
-- **Smart Time Calculations** - Accurate program positioning and duration
+- **Smart Time Calculations** - Accurate program positioning and duration using Day.js
+- **Scroll-responsive Header** - Time markers update based on visible timeline area
+- **Overnight Schedule Fix** - Automatic correction of programs spanning midnight
+- **Timeline Width Optimization** - Rounds up to hour boundaries for clean appearance
+- **UTC Time Handling** - Consistent timezone handling across all components
 
 ### Navigation & Interaction
 
 - **Click Selection** - Select programs with visual feedback
 - **Auto-scroll** - Automatically scroll to show selected programs
+- **Now Button** - Quick jump to current time with smart centering
 - **Keyboard Support** - Navigate with arrow keys (TV-style navigation)
 - **Touch-friendly** - Optimized for mobile touch interactions
 
@@ -171,6 +190,9 @@ npm run test:ui
 - **Ref-based State** - Uses refs instead of useState for animation state
 - **Hidden Scrollbars** - Clean UI without scrollbar performance impact
 - **Efficient Time Calculations** - Cached and memoized Day.js utilities
+- **Timeline Width Caching** - Memoized timeline width calculations
+- **Scroll Position Tracking** - Optimized scroll event handling with debouncing
+- **Type-safe Utilities** - Comprehensive JSDoc documentation for all utility functions
 
 ## 🎨 Design System
 

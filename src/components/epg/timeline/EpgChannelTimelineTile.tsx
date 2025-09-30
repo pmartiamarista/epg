@@ -14,20 +14,20 @@ import { formatTime } from "@/utils/time/formatTime/formatTime";
 
 import Card from "../../card/Card";
 
-import type { IsPlaying, IsSelected } from "@/types/common.types";
+import type { IsNowPlaying, IsSelected } from "@/types/common.types";
 import type { EpgGridCell } from "@/types/egp.types";
 
 interface EpgChannelTimelineTileProps
   extends React.HTMLAttributes<HTMLDivElement>,
     Pick<EpgGridCell, "program">,
     Partial<IsSelected>,
-    Partial<IsPlaying> {}
+    Partial<IsNowPlaying> {}
 
 const EpgChannelTimelineTile: FC<EpgChannelTimelineTileProps> = ({
   program,
   style,
   className,
-  isPlaying,
+  IsNowPlaying,
   isSelected = false,
   ...props
 }) => {
@@ -43,17 +43,17 @@ const EpgChannelTimelineTile: FC<EpgChannelTimelineTileProps> = ({
     "absolute top-0 left-0 flex items-center transition-all duration-200",
     "cursor-pointer overflow-hidden border border-border-primary hover:bg-bg-hover",
     "bg-bg-primary",
-    isPlaying && "bg-bg-tertiary shadow-lg z-10",
+    IsNowPlaying && "bg-bg-tertiary shadow-lg z-10",
     isSelected && "bg-bg-tertiary z-10",
     className
   );
 
   const startTimeFormatted = useMemo(
-    () => formatTime(new Date(program.start)),
+    () => formatTime(program.start),
     [program.start]
   );
   const endTimeFormatted = useMemo(
-    () => formatTime(new Date(program.end)),
+    () => formatTime(program.end),
     [program.end]
   );
 

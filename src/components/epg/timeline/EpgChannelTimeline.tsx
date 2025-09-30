@@ -1,53 +1,60 @@
 import { memo } from "react";
 
+import dayjs from "@/constants/dayjs/dayjs";
 import now from "@/utils/time/now/now";
 
 import EpgChannelTimelineTile from "./EpgChannelTimelineTile";
 
+import type { GlobalEarliestStart, HourWidth } from "@/types/common.types";
 import type { EpgChannel } from "@/types/egp.types";
 
-interface EpgChannelTimelineProps extends Pick<EpgChannel, "schedules"> {
-  hourWidth: number;
-  selectedProgram?: string | null;
-  globalEarliestStart: number;
-  onClick: (programId: string) => void;
-}
+interface EpgChannelTimelineProps
+  extends Pick<EpgChannel, "schedules">,
+    HourWidth,
+    GlobalEarliestStart {}
 
 const EpgChannelTimeline = memo<EpgChannelTimelineProps>(
-  ({ schedules, hourWidth, selectedProgram, globalEarliestStart, onClick }) => {
+  ({ schedules, hourWidth, globalEarliestStart }) => {
     const nowDate = now().toDate();
 
-    // Calculate timeline width based on this channel's programs
     const latestEnd =
       schedules.length > 0
-        ? Math.max(...schedules.map(p => new Date(p.end).getTime()))
+        ? Math.max(...schedules.map(p => dayjs(p.end).valueOf()))
         : globalEarliestStart;
 
-    const totalMinutes = (latestEnd - globalEarliestStart) / 60000;
-    const timelineWidth = Math.max((totalMinutes / 60) * hourWidth, 200);
+    const startTime = dayjs(globalEarliestStart);
+    const endTime = dayjs(latestEnd);
+    const totalMinutes = endTime.diff(startTime, "minute", true);
+
+    // Round up to the next hour boundary to avoid cut-off appearance
+    const roundedHours = Math.ceil(totalMinutes / 60);
+    const timelineWidth = Math.max(roundedHours * hourWidth, 200);
 
     return (
       <div className="relative h-full" style={{ width: `${timelineWidth}px` }}>
         {schedules.map(program => {
-          const start = new Date(program.start);
-          const end = new Date(program.end);
-          const isPlaying = nowDate >= start && nowDate < end;
-          const offsetMinutes = (start.getTime() - globalEarliestStart) / 60000;
-          const durationMinutes = (end.getTime() - start.getTime()) / 60000;
+          const start = dayjs(program.start);
+          const end = dayjs(program.end);
+          const isNowPlaying =
+            nowDate >= start.toDate() && nowDate < end.toDate();
+          const offsetMinutes = start.diff(
+            dayjs(globalEarliestStart),
+            "minute"
+          );
+          const durationMinutes = end.diff(start, "minute");
           const pixelWidth = (durationMinutes / 60) * hourWidth;
 
           return (
             <EpgChannelTimelineTile
               key={program.id}
+              role="button"
               program={program}
-              isPlaying={isPlaying}
-              isSelected={selectedProgram === program.id}
+              IsNowPlaying={isNowPlaying}
               style={{
                 left: `${(offsetMinutes / 60) * hourWidth}px`,
                 width: `${pixelWidth}px`,
               }}
               data-program-id={program.id}
-              onClick={() => onClick(program.id)}
             />
           );
         })}
