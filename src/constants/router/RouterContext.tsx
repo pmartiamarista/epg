@@ -2,7 +2,7 @@ import type { QueryClient } from "@tanstack/react-query";
 
 import type { router } from "./router";
 
-export interface RouterContext {
+export interface CustomRouterContext {
   queryClient: QueryClient;
 }
 
@@ -10,6 +10,6 @@ export interface RouterContext {
 declare module "@tanstack/react-router" {
   interface Register {
     router: typeof router;
-    context: RouterContext;
+    context: CustomRouterContext;
   }
 }

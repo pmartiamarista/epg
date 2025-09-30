@@ -5,9 +5,9 @@ import {
 } from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
 
-import type { RouterContext } from "@/constants/router/RouterContext";
+import type { CustomRouterContext } from "@/constants/router/RouterContext";
 
-export const Route = createRootRouteWithContext<RouterContext>()({
+export const Route = createRootRouteWithContext<CustomRouterContext>()({
   component: () => (
     <>
       <HeadContent />

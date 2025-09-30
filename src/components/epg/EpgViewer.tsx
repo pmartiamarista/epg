@@ -1,18 +1,17 @@
 import { useVirtualizer } from "@tanstack/react-virtual";
-import React, { useCallback, useLayoutEffect, useMemo, useRef } from "react";
+import React, { useLayoutEffect, useMemo, useRef } from "react";
 
-import dayjs from "@/constants/dayjs/dayjs";
 import {
   DESKTOP_BREAKPOINT,
   layoutConfigByDevice,
   TABLET_BREAKPOINT,
 } from "@/constants/layout";
 import { calculateTimelineWidth } from "@/utils/time/calculateTimelineWidth/calculateTimelineWidth";
-import { now } from "@/utils/time/now/now";
 
 import EpgDayHeader from "./header/EpgDayHeader";
 import EpgTimeHeader from "./header/EpgTimeHeader";
 import NowButton from "./NowButton";
+import CurrentTimeLine from "./timeline/CurrentTimeLine";
 import EpgChannelTile from "./timeline/EpgChannelTile";
 import EpgChannelTimeline from "./timeline/EpgChannelTimeline";
 
@@ -60,26 +59,6 @@ const EpgViewer: React.FC<EPGProps> = ({ channels }) => {
     });
   }, [globalEarliestStart, globalLatestEnd]);
 
-  const handleScrollToNow = useCallback(() => {
-    if (!containerRef.current) return;
-
-    const nowTime = now();
-    const hoursFromStart = nowTime.diff(
-      dayjs(globalEarliestStart),
-      "hour",
-      true
-    );
-    const scrollLeft = hoursFromStart * layoutRef.current.hourWidth;
-    const containerWidth = containerRef.current.clientWidth;
-    const centeredScrollLeft =
-      scrollLeft - containerWidth / 2 + layoutRef.current.channelColumnWidth;
-
-    containerRef.current.scrollTo({
-      left: Math.max(0, centeredScrollLeft),
-      behavior: "smooth",
-    });
-  }, [globalEarliestStart]);
-
   useLayoutEffect(() => {
     const checkSize = () => {
       if (window.innerWidth >= DESKTOP_BREAKPOINT) {
@@ -99,7 +78,12 @@ const EpgViewer: React.FC<EPGProps> = ({ channels }) => {
     <div className="h-screen w-screen flex flex-col text-text-primary font-sans select-none">
       <div className="flex items-center justify-between p-4 bg-bg-secondary border-b border-border-primary">
         <h1 className="text-xl font-bold">EPG Viewer</h1>
-        <NowButton onScrollToNow={handleScrollToNow} />
+        <NowButton
+          containerRef={containerRef}
+          layoutRef={layoutRef}
+          globalEarliestStart={globalEarliestStart}
+          hourWidth={layoutRef.current.hourWidth}
+        />
       </div>
 
       <EpgDayHeader
@@ -128,6 +112,13 @@ const EpgViewer: React.FC<EPGProps> = ({ channels }) => {
             width: `${timelineWidth}px`,
           }}
         >
+          {/* Current time line */}
+          <CurrentTimeLine
+            globalEarliestStart={globalEarliestStart}
+            hourWidth={layoutRef.current.hourWidth}
+            channelColumnWidth={layoutRef.current.channelColumnWidth}
+          />
+
           {rowVirtualizer.getVirtualItems().map(virtualRow => {
             const channel = channels[virtualRow.index];
             if (!channel) return null;

@@ -4,6 +4,7 @@ import type {
   ChannelColumnWidth,
   GlobalEarliestStart,
   HourWidth,
+  ScrollPosition,
 } from "@/types/common.types";
 
 /**
@@ -12,10 +13,8 @@ import type {
 interface GetCurrentDayConfig
   extends GlobalEarliestStart,
     ChannelColumnWidth,
-    HourWidth {
-  /** Current horizontal scroll position in pixels */
-  scrollLeft: number;
-}
+    HourWidth,
+    Pick<ScrollPosition, "scrollLeft"> {}
 
 /**
  * Calculates which day is currently visible in the EPG timeline based on scroll position

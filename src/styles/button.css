@@ -1,0 +1,85 @@
+/* Button Base Styles */
+.btn {
+  @apply font-semibold rounded-md transition-colors duration-200;
+  @apply focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-bg-primary;
+  @apply cursor-pointer inline-flex items-center justify-center;
+}
+
+/* Button Sizes */
+.btn-sm {
+  @apply px-3 py-1.5 text-sm;
+}
+
+.btn-md {
+  @apply px-4 py-2 text-sm;
+}
+
+.btn-lg {
+  @apply px-6 py-3 text-base;
+}
+
+/* Button Variants */
+.btn-primary {
+  @apply bg-bg-active text-white;
+  @apply hover:bg-accent-blue-hover;
+  @apply focus:ring-accent-blue;
+}
+
+.btn-secondary {
+  @apply bg-bg-tertiary text-text-primary border border-border-primary;
+  @apply hover:bg-bg-hover;
+  @apply focus:ring-border-primary;
+}
+
+.btn-yellow {
+  background-color: var(--accent-yellow);
+  @apply text-white;
+}
+
+.btn-yellow:hover {
+  background-color: var(--accent-yellow-hover);
+}
+
+.btn-yellow:focus {
+  @apply ring-accent-yellow;
+}
+
+.btn-green {
+  background-color: var(--accent-green);
+  @apply text-white;
+}
+
+.btn-green:hover {
+  background-color: var(--accent-green-hover);
+}
+
+.btn-green:focus {
+  @apply ring-accent-green;
+}
+
+.btn-red {
+  background-color: var(--accent-red);
+  @apply text-white;
+}
+
+.btn-red:hover {
+  background-color: var(--accent-red-hover);
+}
+
+.btn-red:focus {
+  @apply ring-accent-red;
+}
+
+.btn-blue {
+  background-color: var(--accent-blue);
+  @apply text-white;
+}
+
+.btn-blue:hover {
+  background-color: var(--accent-blue-hover);
+}
+
+.btn-blue:focus {
+  @apply ring-accent-blue;
+}
+

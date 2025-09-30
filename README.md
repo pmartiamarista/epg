@@ -14,6 +14,8 @@ A modern, responsive Electronic Program Guide built with React 19 and TypeScript
 - **Auto-scroll to Selected** - Automatically scrolls to show selected programs
 - **Responsive Design** - Adapts to mobile, tablet, and desktop viewports
 - **Keyboard Navigation** - Full keyboard support with spatial navigation
+- **Real-time Updates** - Live "now playing" indicators and current time line
+- **Current Time Line** - Moving vertical line showing current time position
 
 ### 🎨 Program Tiles
 
@@ -43,6 +45,7 @@ A modern, responsive Electronic Program Guide built with React 19 and TypeScript
 - **Day.js** - Lightweight date manipulation
 - **Zod** - Runtime type validation
 - **Norigin Spatial Navigation** - TV-style keyboard navigation
+- **Zustand** - Lightweight state management for real-time updates
 
 ## Typography System
 
@@ -98,11 +101,13 @@ src/
 │   │   ├── NowButton.tsx        # Jump to current time button
 │   │   ├── header/              # Time header components
 │   │   │   ├── EpgTimeHeader.tsx    # Dynamic hour markers
+│   │   │   ├── EpgDayHeader.tsx     # Day navigation header
 │   │   │   └── TimeInterval.tsx     # Individual hour interval
 │   │   └── timeline/            # Timeline-related components
 │   │       ├── EpgChannelTile.tsx        # Channel information tile
 │   │       ├── EpgChannelTimeline.tsx    # Channel's program timeline
-│   │       └── EpgChannelTimelineTile.tsx # Individual program tile
+│   │       ├── EpgChannelTimelineTile.tsx # Individual program tile
+│   │       └── CurrentTimeLine.tsx       # Real-time current time indicator
 │   ├── typography/              # Design system typography
 │   │   ├── body/               # Body text components
 │   │   └── heading/            # Heading components
@@ -112,7 +117,8 @@ src/
 │   ├── api-client/            # HTTP client configuration
 │   └── epg-service/           # EPG-specific API services
 ├── hooks/                      # Custom React hooks
-│   └── useScrollPosition.ts   # Scroll position tracking
+│   ├── useScrollPosition.ts   # Scroll position tracking
+│   └── useCurrentTime.ts      # Real-time current time access
 ├── utils/
 │   └── time/                   # Time utility functions
 │       ├── formatTime/         # Time formatting utilities
@@ -129,6 +135,9 @@ src/
 │   ├── typography.css         # Typography classes
 │   └── theme.css              # Theme configuration
 ├── routes/                     # File-based routing
+├── stores/                     # Zustand state management
+│   ├── timeStore.ts           # Global time state
+│   └── time.selectors.ts      # Time state selectors
 ├── types/                      # TypeScript definitions
 └── constants/                  # App-wide constants
 │   ├── layout.ts              # Responsive layout configuration
@@ -151,6 +160,8 @@ src/
 - **Global Timeline Sync** - All channels share the same time reference
 - **Hour Intervals** - Timeline broken into hour segments with dynamic header
 - **Current Time Indicator** - Visual marker showing the current time
+- **Real-time Updates** - Live current time updates every 60 seconds via Zustand store
+- **Moving Time Line** - Vertical line that moves across the timeline in real-time
 - **Smart Time Calculations** - Accurate program positioning and duration using Day.js
 - **Scroll-responsive Header** - Time markers update based on visible timeline area
 - **Overnight Schedule Fix** - Automatic correction of programs spanning midnight
@@ -193,6 +204,9 @@ npm run test:ui
 - **Timeline Width Caching** - Memoized timeline width calculations
 - **Scroll Position Tracking** - Optimized scroll event handling with debouncing
 - **Type-safe Utilities** - Comprehensive JSDoc documentation for all utility functions
+- **Zustand State Management** - Efficient global state with minimal re-renders
+- **Real-time Updates** - Single timer updates all components simultaneously
+- **Selective Re-renders** - Only components using current time re-render on updates
 
 ## 🎨 Design System
 
@@ -203,3 +217,23 @@ The app features a comprehensive design system with:
 - **Gradient System** - Smooth visual transitions
 - **Component Variants** - Flexible, reusable components
 - **Accessibility** - WCAG compliant with proper focus management
+
+## 🔧 Recent Updates
+
+### Real-time Features
+
+- **Live Current Time** - Global time state updates every 60 seconds
+- **Moving Time Line** - Visual indicator that moves across the timeline
+- **Dynamic "Now Playing"** - Program tiles update their playing state in real-time
+- **Zustand Integration** - Lightweight state management for time updates
+
+### Enhanced Navigation
+
+- **Keyboard Support** - Full keyboard navigation with spatial navigation
+- **Touch-friendly** - Optimized for mobile touch interactions
+
+### Code Quality
+
+- **Type Reuse** - Consistent use of shared types across components
+- **JSDoc Documentation** - Comprehensive documentation for all utility functions
+- **Performance Optimization** - Efficient re-rendering and state management

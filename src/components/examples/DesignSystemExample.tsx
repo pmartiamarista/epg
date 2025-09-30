@@ -1,5 +1,6 @@
 import { memo } from "react";
 
+import Button from "../button/Button";
 import Body from "../typography/body/Body";
 import Heading from "../typography/heading/Heading";
 
@@ -594,6 +595,147 @@ const DesignSystemExample = memo(() => {
               This uses tertiary background with secondary and tertiary text
               colors.
             </Body>
+          </div>
+        </div>
+      </section>
+
+      {/* Button Variants and Sizes */}
+      <section className="space-y-6">
+        <Heading as="h2" className="font-bold text-text-primary">
+          Button Components
+        </Heading>
+
+        {/* Button Variants */}
+        <div className="space-y-4">
+          <Heading as="h3" className="font-semibold text-text-secondary">
+            Button Variants
+          </Heading>
+          <div className="flex flex-wrap gap-4">
+            <Button variant="primary" size="md">
+              Primary
+            </Button>
+            <Button variant="secondary" size="md">
+              Secondary
+            </Button>
+            <Button variant="yellow" size="md">
+              Yellow
+            </Button>
+            <Button variant="green" size="md">
+              Green
+            </Button>
+            <Button variant="red" size="md">
+              Red
+            </Button>
+            <Button variant="blue" size="md">
+              Blue
+            </Button>
+          </div>
+        </div>
+
+        {/* Button Sizes */}
+        <div className="space-y-4">
+          <Heading as="h3" className="font-semibold text-text-secondary">
+            Button Sizes
+          </Heading>
+          <div className="flex flex-wrap items-center gap-4">
+            <Button variant="primary" size="sm">
+              Small
+            </Button>
+            <Button variant="primary" size="md">
+              Medium
+            </Button>
+            <Button variant="primary" size="lg">
+              Large
+            </Button>
+          </div>
+        </div>
+
+        {/* All Combinations */}
+        <div className="space-y-4">
+          <Heading as="h3" className="font-semibold text-text-secondary">
+            All Variant & Size Combinations
+          </Heading>
+          <div className="space-y-6">
+            {/* Small Buttons */}
+            <div className="space-y-2">
+              <Body size="sm" className="font-medium text-text-tertiary">
+                Small Size
+              </Body>
+              <div className="flex flex-wrap gap-3">
+                <Button variant="primary" size="sm">
+                  Primary
+                </Button>
+                <Button variant="secondary" size="sm">
+                  Secondary
+                </Button>
+                <Button variant="yellow" size="sm">
+                  Yellow
+                </Button>
+                <Button variant="green" size="sm">
+                  Green
+                </Button>
+                <Button variant="red" size="sm">
+                  Red
+                </Button>
+                <Button variant="blue" size="sm">
+                  Blue
+                </Button>
+              </div>
+            </div>
+
+            {/* Medium Buttons */}
+            <div className="space-y-2">
+              <Body size="sm" className="font-medium text-text-tertiary">
+                Medium Size
+              </Body>
+              <div className="flex flex-wrap gap-3">
+                <Button variant="primary" size="md">
+                  Primary
+                </Button>
+                <Button variant="secondary" size="md">
+                  Secondary
+                </Button>
+                <Button variant="yellow" size="md">
+                  Yellow
+                </Button>
+                <Button variant="green" size="md">
+                  Green
+                </Button>
+                <Button variant="red" size="md">
+                  Red
+                </Button>
+                <Button variant="blue" size="md">
+                  Blue
+                </Button>
+              </div>
+            </div>
+
+            {/* Large Buttons */}
+            <div className="space-y-2">
+              <Body size="sm" className="font-medium text-text-tertiary">
+                Large Size
+              </Body>
+              <div className="flex flex-wrap gap-3">
+                <Button variant="primary" size="lg">
+                  Primary
+                </Button>
+                <Button variant="secondary" size="lg">
+                  Secondary
+                </Button>
+                <Button variant="yellow" size="lg">
+                  Yellow
+                </Button>
+                <Button variant="green" size="lg">
+                  Green
+                </Button>
+                <Button variant="red" size="lg">
+                  Red
+                </Button>
+                <Button variant="blue" size="lg">
+                  Blue
+                </Button>
+              </div>
+            </div>
           </div>
         </div>
       </section>

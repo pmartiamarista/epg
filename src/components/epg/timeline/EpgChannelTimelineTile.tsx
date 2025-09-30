@@ -8,26 +8,26 @@ import React, {
 } from "react";
 import { twMerge } from "tailwind-merge";
 
+import useCurrentTime from "@/hooks/useCurrentTime";
+
 import Body from "@/components/typography/body/Body";
 
 import { formatTime } from "@/utils/time/formatTime/formatTime";
 
 import Card from "../../card/Card";
 
-import type { IsNowPlaying, IsSelected } from "@/types/common.types";
+import type { IsSelected } from "@/types/common.types";
 import type { EpgGridCell } from "@/types/egp.types";
 
 interface EpgChannelTimelineTileProps
   extends React.HTMLAttributes<HTMLDivElement>,
     Pick<EpgGridCell, "program">,
-    Partial<IsSelected>,
-    Partial<IsNowPlaying> {}
+    Partial<IsSelected> {}
 
 const EpgChannelTimelineTile: FC<EpgChannelTimelineTileProps> = ({
   program,
   style,
   className,
-  IsNowPlaying,
   isSelected = false,
   ...props
 }) => {
@@ -38,12 +38,17 @@ const EpgChannelTimelineTile: FC<EpgChannelTimelineTileProps> = ({
   const isTimeNarrowRef = useRef(false);
   const isHoveredRef = useRef(false);
 
+  const currentTime = useCurrentTime();
+
+  const isNowPlaying =
+    currentTime.isAfter(program.start) && currentTime.isBefore(program.end);
+
   const currentClassName = twMerge(
     "h-full",
     "absolute top-0 left-0 flex items-center transition-all duration-200",
     "cursor-pointer overflow-hidden border border-border-primary hover:bg-bg-hover",
     "bg-bg-primary",
-    IsNowPlaying && "bg-bg-tertiary shadow-lg z-10",
+    isNowPlaying && "bg-bg-tertiary shadow-lg z-10",
     isSelected && "bg-bg-tertiary z-10",
     className
   );

@@ -1,7 +1,6 @@
 import { memo } from "react";
 
 import dayjs from "@/constants/dayjs/dayjs";
-import now from "@/utils/time/now/now";
 
 import EpgChannelTimelineTile from "./EpgChannelTimelineTile";
 
@@ -15,8 +14,6 @@ interface EpgChannelTimelineProps
 
 const EpgChannelTimeline = memo<EpgChannelTimelineProps>(
   ({ schedules, hourWidth, globalEarliestStart }) => {
-    const nowDate = now().toDate();
-
     const latestEnd =
       schedules.length > 0
         ? Math.max(...schedules.map(p => dayjs(p.end).valueOf()))
@@ -35,8 +32,7 @@ const EpgChannelTimeline = memo<EpgChannelTimelineProps>(
         {schedules.map(program => {
           const start = dayjs(program.start);
           const end = dayjs(program.end);
-          const isNowPlaying =
-            nowDate >= start.toDate() && nowDate < end.toDate();
+
           const offsetMinutes = start.diff(
             dayjs(globalEarliestStart),
             "minute"
@@ -49,7 +45,6 @@ const EpgChannelTimeline = memo<EpgChannelTimelineProps>(
               key={program.id}
               role="button"
               program={program}
-              IsNowPlaying={isNowPlaying}
               style={{
                 left: `${(offsetMinutes / 60) * hourWidth}px`,
                 width: `${pixelWidth}px`,

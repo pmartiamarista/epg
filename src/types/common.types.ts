@@ -1,3 +1,5 @@
+import type React from "react";
+
 export interface BaseEntity {
   id: string;
 }
@@ -7,7 +9,7 @@ export type IsSelected = {
 };
 
 export type IsNowPlaying = {
-  IsNowPlaying: boolean;
+  isNowPlaying: boolean;
 };
 
 export type HourWidth = {
@@ -42,4 +44,13 @@ export interface TimeIntervalConfig {
 export interface StartEndConfig {
   start: number;
   end: number;
+}
+
+export interface ScrollPosition {
+  scrollLeft: number;
+  containerWidth: number;
+}
+
+export interface ScrollContainerRef {
+  scrollContainerRef: React.RefObject<HTMLDivElement | null>;
 }
