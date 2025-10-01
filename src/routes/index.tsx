@@ -4,12 +4,12 @@ import { createFileRoute } from "@tanstack/react-router";
 import EpgViewer from "@/components/epg/EpgViewer";
 
 import { epgQueries } from "@/api/epg-service/epg-queries";
-import { fixOvernightSchedules } from "@/utils/time/fixOvernightSchedules/fixOvernightSchedules";
+import { prepareChannelSchedules } from "@/utils/prepareChannelSchedules/prepareChannelSchedules";
 
 const EPGPage = () => {
   const { data } = useSuspenseQuery(epgQueries.getEpgData());
 
-  const channels = fixOvernightSchedules(data);
+  const channels = prepareChannelSchedules(data);
 
   return <EpgViewer channels={channels} />;
 };
