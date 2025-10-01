@@ -120,15 +120,16 @@ src/
 │   ├── useScrollPosition.ts   # Scroll position tracking
 │   └── useCurrentTime.ts      # Real-time current time access
 ├── utils/
-│   └── time/                   # Time utility functions
-│       ├── formatTime/         # Time formatting utilities
-│       ├── now/               # Current time helpers
-│       ├── isToday/           # Date comparison utilities
-│       ├── isBetweenDates/    # Date range checking utilities
-│       ├── getCurrentDay/     # Current day calculation
-│       ├── calculateTimelineWidth/ # Timeline width calculation
-│       ├── calculateVisibleHours/ # Visible hour calculation
-│       └── fixOvernightSchedules/ # Overnight schedule correction
+│   ├── time/                   # Time utility functions
+│   │   ├── formatTime/         # Time formatting utilities
+│   │   ├── now/               # Current time helpers
+│   │   ├── isToday/           # Date comparison utilities
+│   │   ├── isBetweenDates/    # Date range checking utilities
+│   │   ├── getCurrentDay/     # Current day calculation
+│   │   ├── calculateTimelineWidth/ # Timeline width calculation
+│   │   └── calculateVisibleHours/ # Visible hour calculation
+│   ├── generateUniqueId/      # Unique ID generation utility
+│   └── prepareChannelSchedules/ # Channel schedule preparation and overnight fix
 ├── styles/                     # Global styles
 │   ├── base.css               # Base styles and animations
 │   ├── colors.css             # Color system
@@ -164,7 +165,7 @@ src/
 - **Moving Time Line** - Vertical line that moves across the timeline in real-time
 - **Smart Time Calculations** - Accurate program positioning and duration using Day.js
 - **Scroll-responsive Header** - Time markers update based on visible timeline area
-- **Overnight Schedule Fix** - Automatic correction of programs spanning midnight
+- **Schedule Preparation** - Automatic correction of programs spanning midnight and unique ID generation
 - **Timeline Width Optimization** - Rounds up to hour boundaries for clean appearance
 - **UTC Time Handling** - Consistent timezone handling across all components
 
@@ -237,3 +238,5 @@ The app features a comprehensive design system with:
 - **Type Reuse** - Consistent use of shared types across components
 - **JSDoc Documentation** - Comprehensive documentation for all utility functions
 - **Performance Optimization** - Efficient re-rendering and state management
+- **Unique ID Generation** - Robust ID generation for program data
+- **Schedule Preparation** - Enhanced channel schedule processing with overnight fixes
