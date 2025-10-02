@@ -11,6 +11,7 @@ export const useTimeStore = create<TimeStoreState>(() => ({
   currentTime: now(),
 }));
 
+// Update current time every 30 seconds
 setInterval(() => {
   useTimeStore.setState({ currentTime: now() });
-}, 60000);
+}, 30000);

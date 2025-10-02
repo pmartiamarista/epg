@@ -1,4 +1,4 @@
-import { type FC, memo } from "react";
+import { type FC, memo, useMemo } from "react";
 
 import Body from "@/components/typography/body/Body";
 
@@ -15,16 +15,20 @@ const EpgTimeHeaderIndicator: FC<EpgTimeHeaderIndicatorProps> = ({
   left,
   width,
 }) => {
+  const timeFormatted = useMemo(() => {
+    return formatTime(time);
+  }, [time]);
+
   return (
     <div
       className="absolute top-0 h-full flex items-center justify-center border-r border-border-secondary"
       style={{
-        left: `${left}px`,
-        width: `${width}px`,
+        left: left,
+        width: width,
       }}
     >
       <Body weight="semibold" size="xs" className="text-text-secondary">
-        {formatTime(time)}
+        {timeFormatted}
       </Body>
     </div>
   );

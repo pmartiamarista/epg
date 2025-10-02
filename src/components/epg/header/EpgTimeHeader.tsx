@@ -6,6 +6,7 @@ import Body from "@/components/typography/body/Body";
 
 import { calculateVisibleHours } from "@/utils/time/calculateVisibleHours/calculateVisibleHours";
 
+import CurrentTimeIndicator from "./CurrentTimeIndicator";
 import EpgTimeHeaderIndicator from "./EpgTimeHeaderIndicator";
 
 import type { GlobalLatestEnd, TotalWidth } from "@/types/common.types";
@@ -49,11 +50,11 @@ const EpgTimeHeader: FC<EpgTimeHeaderProps> = ({
   return (
     <div
       className="sticky top-0 z-30 flex bg-bg-primary border-b border-border-primary"
-      style={{ width: `${totalWidth}px` }}
+      style={{ width: totalWidth }}
     >
       <div
         className="flex items-center justify-center border-r border-border-primary"
-        style={{ width: `${channelColumnWidth}px` }}
+        style={{ width: channelColumnWidth }}
       >
         <Body weight="bold" size="sm" className="text-text-secondary">
           &nbsp;
@@ -69,6 +70,11 @@ const EpgTimeHeader: FC<EpgTimeHeaderProps> = ({
             width={hourWidth}
           />
         ))}
+
+        <CurrentTimeIndicator
+          globalEarliestStart={globalEarliestStart}
+          hourWidth={hourWidth}
+        />
       </div>
     </div>
   );

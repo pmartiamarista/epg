@@ -4,8 +4,8 @@ import { useTimeStore } from "@/stores/timeStore";
  * Hook that provides access to the current time from the time store
  *
  * This hook returns the current time as a Dayjs object, which is automatically
- * updated every minute. It's useful for components that need to react to or
- * display the current time.
+ * updated every 30 seconds. It's useful for components that need to react to or
+ * display the current time in the EPG, including progress indicators and time markers.
  *
  * @returns {Dayjs} The current time as a Dayjs object
  *

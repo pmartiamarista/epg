@@ -1,6 +1,7 @@
 import dayjs from "@/constants/dayjs/dayjs";
 
-import type { StartEndConfig, TimeIntervalConfig } from "@/types/common.types";
+import type { TimeIntervalConfig } from "@/types/common.types";
+import type { ProgramSchedule } from "@/types/egp.types";
 
 /**
  * Calculates which hours should be visible in the EPG timeline based on the current scroll position
@@ -33,7 +34,7 @@ export const calculateVisibleHours = (
   globalEarliestStart: number,
   globalLatestEnd: number,
   hourWidth: number,
-  visibleRange: StartEndConfig
+  visibleRange: Pick<ProgramSchedule, "start" | "end">
 ): TimeIntervalConfig[] => {
   const startTime = dayjs(globalEarliestStart);
   const endTime = dayjs(globalLatestEnd);

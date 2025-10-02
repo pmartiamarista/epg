@@ -58,8 +58,6 @@ export const calculateTimelineWidth = ({
   const endTime = dayjs(globalLatestEnd);
   const totalHours = endTime.diff(startTime, "hour", true);
 
-  // Round up to the next hour boundary to avoid cut-off appearance
-  const roundedHours = Math.ceil(totalHours);
-
-  return Math.max(roundedHours * hourWidth + channelColumnWidth, minWidth);
+  // Use exact hours instead of rounding up to avoid extra empty space
+  return Math.max(totalHours * hourWidth + channelColumnWidth, minWidth);
 };

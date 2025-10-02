@@ -1,6 +1,5 @@
 import React, {
   type FC,
-  memo,
   useCallback,
   useLayoutEffect,
   useMemo,
@@ -14,42 +13,41 @@ import Body from "@/components/typography/body/Body";
 
 import { formatTime } from "@/utils/time/formatTime/formatTime";
 
+import EpgChannelTimelineTileProgressBar from "./EpgChannelTimelineTileProgressBar";
 import Card from "../../card/Card";
 
-import type { IsSelected } from "@/types/common.types";
 import type { EpgGridCell } from "@/types/egp.types";
 
 interface EpgChannelTimelineTileProps
   extends React.HTMLAttributes<HTMLDivElement>,
-    Pick<EpgGridCell, "program">,
-    Partial<IsSelected> {}
+    Pick<EpgGridCell, "program"> {}
 
 const EpgChannelTimelineTile: FC<EpgChannelTimelineTileProps> = ({
   program,
   style,
   className,
-  isSelected = false,
+
   ...props
 }) => {
   const cardRef = useRef<HTMLDivElement>(null);
   const titleRef = useRef<HTMLParagraphElement>(null);
   const timeRef = useRef<HTMLParagraphElement>(null);
-  const isTitleNarrowRef = useRef(false);
-  const isTimeNarrowRef = useRef(false);
   const isHoveredRef = useRef(false);
+  const isTitleOverflowRef = useRef(false);
+  const isTimeOverflowRef = useRef(false);
 
   const currentTime = useCurrentTime();
 
   const isNowPlaying =
     currentTime.isAfter(program.start) && currentTime.isBefore(program.end);
 
-  const currentClassName = twMerge(
+  const styles = twMerge(
     "h-full",
+    "p-0 shrink-0 grow-0",
     "absolute top-0 left-0 flex items-center transition-all duration-200",
     "cursor-pointer overflow-hidden border border-border-primary hover:bg-bg-hover",
     "bg-bg-primary",
-    isNowPlaying && "bg-bg-tertiary shadow-lg ",
-    isSelected && "bg-bg-tertiary ",
+    isNowPlaying && "bg-bg-tertiary shadow-lg",
     className
   );
 
@@ -63,64 +61,62 @@ const EpgChannelTimelineTile: FC<EpgChannelTimelineTileProps> = ({
   );
 
   const updateAnimation = useCallback(() => {
-    const shouldAnimate = isHoveredRef.current || isSelected;
+    const shouldAnimate = isHoveredRef.current && isTitleOverflowRef.current;
 
     if (titleRef.current) {
       titleRef.current.className = twMerge(
         "text-white text-sm font-semibold min-w-0",
-        shouldAnimate && isTitleNarrowRef.current
-          ? "animate-marquee whitespace-nowrap"
-          : "truncate"
+        shouldAnimate ? "animate-marquee whitespace-nowrap" : "truncate"
       );
     }
+
+    const shouldAnimateTime = isHoveredRef.current && isTimeOverflowRef.current;
 
     if (timeRef.current) {
       timeRef.current.className = twMerge(
         "text-text-secondary text-xs font-semibold min-w-0",
-        shouldAnimate && isTimeNarrowRef.current
-          ? "animate-marquee whitespace-nowrap"
-          : "truncate"
+        shouldAnimateTime ? "animate-marquee whitespace-nowrap" : "truncate"
       );
     }
-  }, [isSelected]);
+  }, []);
 
   useLayoutEffect(() => {
-    const checkWidth = () => {
+    // Check if text overflows container
+    const checkOverflow = () => {
       if (titleRef.current) {
-        const textContainer = titleRef.current.parentElement;
-        if (textContainer) {
-          const containerWidth = textContainer.offsetWidth;
+        const container = titleRef.current.parentElement;
+        if (container) {
+          const containerWidth = container.offsetWidth;
           const textWidth = titleRef.current.scrollWidth;
-          isTitleNarrowRef.current = textWidth > containerWidth;
+          isTitleOverflowRef.current = textWidth > containerWidth;
         }
       }
 
       if (timeRef.current) {
-        const timeContainer = timeRef.current.parentElement;
-        if (timeContainer) {
-          const containerWidth = timeContainer.offsetWidth;
+        const container = timeRef.current.parentElement;
+        if (container) {
+          const containerWidth = container.offsetWidth;
           const timeWidth = timeRef.current.scrollWidth;
-          isTimeNarrowRef.current = timeWidth > containerWidth;
+          isTimeOverflowRef.current = timeWidth > containerWidth;
         }
       }
 
       updateAnimation();
     };
 
-    checkWidth();
-    window.addEventListener("resize", checkWidth);
-    return () => window.removeEventListener("resize", checkWidth);
-  }, [program.title, updateAnimation]);
+    checkOverflow();
+    window.addEventListener("resize", checkOverflow);
 
-  useLayoutEffect(() => {
-    updateAnimation();
-  }, [isSelected, updateAnimation]);
+    return () => window.removeEventListener("resize", checkOverflow);
+  }, [program.title, updateAnimation]);
 
   return (
     <Card
       ref={cardRef}
       style={style}
-      className={twMerge("p-0 shrink-0 grow-0", currentClassName)}
+      className={styles}
+      role="button"
+      aria-label={program.title}
       onMouseEnter={() => {
         isHoveredRef.current = true;
         updateAnimation();
@@ -140,9 +136,15 @@ const EpgChannelTimelineTile: FC<EpgChannelTimelineTileProps> = ({
             {startTimeFormatted} - {endTimeFormatted}
           </Body>
         </div>
+
+        {isNowPlaying && (
+          <div className="absolute bottom-0 left-0 right-0">
+            <EpgChannelTimelineTileProgressBar program={program} />
+          </div>
+        )}
       </div>
     </Card>
   );
 };
 
-export default memo(EpgChannelTimelineTile);
+export default EpgChannelTimelineTile;

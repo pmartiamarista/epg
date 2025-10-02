@@ -23,14 +23,13 @@ const EpgChannelTimeline = memo<EpgChannelTimelineProps>(
     const endTime = dayjs(latestEnd);
     const totalMinutes = endTime.diff(startTime, "minute", true);
 
-    // Round up to the next hour boundary to avoid cut-off appearance
     const roundedHours = Math.ceil(totalMinutes / 60);
     const timelineWidth = Math.max(roundedHours * hourWidth, 200);
 
     return (
       <div
         className="relative h-full overflow-hidden"
-        style={{ width: `${timelineWidth}px` }}
+        style={{ width: timelineWidth }}
       >
         {schedules.map(program => {
           const start = dayjs(program.start);
@@ -49,8 +48,8 @@ const EpgChannelTimeline = memo<EpgChannelTimelineProps>(
               role="button"
               program={program}
               style={{
-                left: `${(offsetMinutes / 60) * hourWidth}px`,
-                width: `${pixelWidth}px`,
+                left: (offsetMinutes / 60) * hourWidth,
+                width: pixelWidth,
               }}
               data-program-id={program.id}
             />

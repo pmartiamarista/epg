@@ -1,4 +1,5 @@
 import React, { type FC, memo } from "react";
+import { twMerge } from "tailwind-merge";
 
 import Body from "@/components/typography/body/Body";
 
@@ -10,12 +11,19 @@ interface EpgChannelTileProps
   extends React.HTMLAttributes<HTMLDivElement>,
     Pick<EpgGridCell, "channel"> {}
 
-const EpgChannelTile: FC<EpgChannelTileProps> = ({ channel, ...props }) => {
+const EpgChannelTile: FC<EpgChannelTileProps> = ({
+  channel,
+  className,
+  ...props
+}) => {
+  const styles = twMerge(
+    "w-3 h-full bg-bg-secondary flex items-center justify-center p-1 border border-border-primary",
+    "shrink-0 grow-0",
+    className
+  );
+
   return (
-    <Card
-      className="h-full bg-bg-secondary sticky left-0 z-3 flex items-center justify-center p-1 shrink-0 grow-0 border border-border-primary"
-      {...props}
-    >
+    <Card className={styles} {...props}>
       <Body className="truncate" weight="bold" size="sm">
         {channel.title}
       </Body>
