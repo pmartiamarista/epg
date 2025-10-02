@@ -28,7 +28,10 @@ const EpgChannelTimeline = memo<EpgChannelTimelineProps>(
     const timelineWidth = Math.max(roundedHours * hourWidth, 200);
 
     return (
-      <div className="relative h-full" style={{ width: `${timelineWidth}px` }}>
+      <div
+        className="relative h-full overflow-hidden"
+        style={{ width: `${timelineWidth}px` }}
+      >
         {schedules.map(program => {
           const start = dayjs(program.start);
           const end = dayjs(program.end);

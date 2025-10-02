@@ -48,8 +48,8 @@ const EpgChannelTimelineTile: FC<EpgChannelTimelineTileProps> = ({
     "absolute top-0 left-0 flex items-center transition-all duration-200",
     "cursor-pointer overflow-hidden border border-border-primary hover:bg-bg-hover",
     "bg-bg-primary",
-    isNowPlaying && "bg-bg-tertiary shadow-lg z-10",
-    isSelected && "bg-bg-tertiary z-10",
+    isNowPlaying && "bg-bg-tertiary shadow-lg ",
+    isSelected && "bg-bg-tertiary ",
     className
   );
 

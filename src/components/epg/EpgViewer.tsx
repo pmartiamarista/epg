@@ -1,11 +1,7 @@
 import { useVirtualizer } from "@tanstack/react-virtual";
 import React, { useLayoutEffect, useMemo, useRef } from "react";
 
-import {
-  DESKTOP_BREAKPOINT,
-  layoutConfigByDevice,
-  TABLET_BREAKPOINT,
-} from "@/constants/layout";
+import { layoutConfig } from "@/constants/layout";
 import { calculateTimelineWidth } from "@/utils/time/calculateTimelineWidth/calculateTimelineWidth";
 
 import EpgDayHeader from "./header/EpgDayHeader";
@@ -21,12 +17,11 @@ type EPGProps = { channels: EpgChannel[] };
 
 const EpgViewer: React.FC<EPGProps> = ({ channels }) => {
   const containerRef = useRef<HTMLDivElement>(null);
-  const layoutRef = useRef(layoutConfigByDevice.mobile);
 
   const rowVirtualizer = useVirtualizer({
     count: channels.length,
     getScrollElement: () => containerRef.current,
-    estimateSize: () => layoutRef.current.rowHeight,
+    estimateSize: () => layoutConfig.rowHeight,
     overscan: 4,
   });
 
@@ -54,25 +49,15 @@ const EpgViewer: React.FC<EPGProps> = ({ channels }) => {
     return calculateTimelineWidth({
       globalEarliestStart,
       globalLatestEnd,
-      hourWidth: layoutRef.current.hourWidth,
-      channelColumnWidth: layoutRef.current.channelColumnWidth,
+      hourWidth: layoutConfig.hourWidth,
+      channelColumnWidth: layoutConfig.channelColumnWidth,
     });
   }, [globalEarliestStart, globalLatestEnd]);
 
   useLayoutEffect(() => {
-    const checkSize = () => {
-      if (window.innerWidth >= DESKTOP_BREAKPOINT) {
-        layoutRef.current = layoutConfigByDevice.desktop;
-      } else if (window.innerWidth >= TABLET_BREAKPOINT) {
-        layoutRef.current = layoutConfigByDevice.tablet;
-      } else {
-        layoutRef.current = layoutConfigByDevice.mobile;
-      }
-    };
-    checkSize();
-    window.addEventListener("resize", checkSize);
-    return () => window.removeEventListener("resize", checkSize);
-  }, []);
+    // Force virtualizer to re-measure after layout change
+    rowVirtualizer.measure();
+  }, [rowVirtualizer]);
 
   return (
     <div className="h-screen w-screen flex flex-col text-text-primary font-sans select-none">
@@ -80,16 +65,15 @@ const EpgViewer: React.FC<EPGProps> = ({ channels }) => {
         <h1 className="text-xl font-bold">EPG Viewer</h1>
         <NowButton
           containerRef={containerRef}
-          layoutRef={layoutRef}
           globalEarliestStart={globalEarliestStart}
-          hourWidth={layoutRef.current.hourWidth}
+          hourWidth={layoutConfig.hourWidth}
         />
       </div>
 
       <EpgDayHeader
         globalEarliestStart={globalEarliestStart}
-        hourWidth={layoutRef.current.hourWidth}
-        channelColumnWidth={layoutRef.current.channelColumnWidth}
+        hourWidth={layoutConfig.hourWidth}
+        channelColumnWidth={layoutConfig.channelColumnWidth}
         scrollContainerRef={containerRef}
       />
       <div
@@ -99,9 +83,9 @@ const EpgViewer: React.FC<EPGProps> = ({ channels }) => {
         <EpgTimeHeader
           globalEarliestStart={globalEarliestStart}
           globalLatestEnd={globalLatestEnd}
-          hourWidth={layoutRef.current.hourWidth}
-          channelColumnWidth={layoutRef.current.channelColumnWidth}
-          totalWidth={timelineWidth}
+          hourWidth={layoutConfig.hourWidth}
+          channelColumnWidth={layoutConfig.channelColumnWidth}
+          totalWidth={timelineWidth + layoutConfig.channelColumnWidth}
           scrollContainerRef={containerRef}
         />
 
@@ -109,14 +93,15 @@ const EpgViewer: React.FC<EPGProps> = ({ channels }) => {
           className="relative"
           style={{
             height: `${rowVirtualizer.getTotalSize()}px`,
-            width: `${timelineWidth}px`,
+            width: `${timelineWidth + layoutConfig.channelColumnWidth}px`,
           }}
         >
-          {/* Current time line */}
+          {/* Current time line - rendered once for all rows */}
           <CurrentTimeLine
             globalEarliestStart={globalEarliestStart}
-            hourWidth={layoutRef.current.hourWidth}
-            channelColumnWidth={layoutRef.current.channelColumnWidth}
+            hourWidth={layoutConfig.hourWidth}
+            channelColumnWidth={layoutConfig.channelColumnWidth}
+            className="z-2"
           />
 
           {rowVirtualizer.getVirtualItems().map(virtualRow => {
@@ -125,23 +110,26 @@ const EpgViewer: React.FC<EPGProps> = ({ channels }) => {
             return (
               <div
                 key={virtualRow.key}
-                className="flex absolute top-0 left-0 bg-bg-primary"
+                className="absolute top-0 left-0 bg-bg-primary"
                 style={{
                   height: `${virtualRow.size}px`,
                   transform: `translateY(${virtualRow.start}px)`,
-                  width: "100%",
+                  width: `${timelineWidth + layoutConfig.channelColumnWidth}px`,
                 }}
               >
-                <EpgChannelTile
-                  channel={channel}
-                  style={{ width: `${layoutRef.current.channelColumnWidth}px` }}
-                />
-                <div className="w-full">
-                  <EpgChannelTimeline
-                    schedules={channel.schedules}
-                    hourWidth={layoutRef.current.hourWidth}
-                    globalEarliestStart={globalEarliestStart}
+                <div className="flex h-full">
+                  <EpgChannelTile
+                    channel={channel}
+                    style={{ width: `${layoutConfig.channelColumnWidth}px` }}
+                    className="z-3 sticky left-0"
                   />
+                  <div className="w-full relative overflow-hidden z-1">
+                    <EpgChannelTimeline
+                      schedules={channel.schedules}
+                      hourWidth={layoutConfig.hourWidth}
+                      globalEarliestStart={globalEarliestStart}
+                    />
+                  </div>
                 </div>
               </div>
             );

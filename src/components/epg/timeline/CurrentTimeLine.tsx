@@ -1,4 +1,5 @@
 import React from "react";
+import { twMerge } from "tailwind-merge";
 
 import useCurrentTime from "@/hooks/useCurrentTime";
 
@@ -11,7 +12,8 @@ import type {
 } from "@/types/common.types";
 
 interface CurrentTimeLineProps
-  extends GlobalEarliestStart,
+  extends React.HTMLAttributes<HTMLDivElement>,
+    GlobalEarliestStart,
     HourWidth,
     ChannelColumnWidth {}
 
@@ -19,6 +21,7 @@ const CurrentTimeLine: React.FC<CurrentTimeLineProps> = ({
   globalEarliestStart,
   hourWidth,
   channelColumnWidth,
+  ...props
 }) => {
   const currentTime = useCurrentTime();
 
@@ -26,9 +29,15 @@ const CurrentTimeLine: React.FC<CurrentTimeLineProps> = ({
   const hoursFromStart = currentTime.diff(startTime, "hour", true);
   const leftPosition = channelColumnWidth + hoursFromStart * hourWidth;
 
+  const currentClassName = twMerge(
+    "absolute top-0 bottom-0 w-0.5 bg-warning pointer-events-none",
+    props.className
+  );
+
   return (
     <div
-      className="absolute top-0 bottom-0 w-0.5 bg-warning z-50 pointer-events-none"
+      className={currentClassName}
+      {...props}
       style={{
         left: `${leftPosition}px`,
       }}

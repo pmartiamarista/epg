@@ -13,7 +13,7 @@ interface EpgChannelTileProps
 const EpgChannelTile: FC<EpgChannelTileProps> = ({ channel, ...props }) => {
   return (
     <Card
-      className="bg-bg-secondary sticky left-0 z-20 flex items-center justify-center p-1 shrink-0 grow-0 border border-border-primary"
+      className="h-full bg-bg-secondary sticky left-0 z-3 flex items-center justify-center p-1 shrink-0 grow-0 border border-border-primary"
       {...props}
     >
       <Body className="truncate" weight="bold" size="sm">
