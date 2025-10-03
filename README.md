@@ -86,15 +86,67 @@ The app includes a robust typography system with:
 - **Font Weights** - Light, normal, medium, semibold, bold
 - **Class Merging** - Intelligent CSS class conflict resolution with twMerge
 
+## 🚀 Getting Started
+
+### Prerequisites
+
+- Node.js 18+ and npm
+- Git
+
+### Backend Setup (Mock API)
+
+1. **Clone the Mock API repository** (cloudberry branch):
+
+   ```bash
+   git clone -b cloudberry https://github.com/NoriginMedia/mock-api.git
+   cd mock-api
+   ```
+
+2. **Install dependencies**:
+
+   ```bash
+   npm install
+   ```
+
+3. **Update EPG data to current day**:
+
+   ```bash
+   npm run update:epg
+   ```
+
+4. **Start the Mock API server**:
+
+   ```bash
+   npm run start:demo
+   ```
+
+   The API will be available at `http://localhost:1337`
+
+### Frontend Setup
+
+1. **Create `.env` file** (use `.env.template` as reference):
+
+   ```bash
+   VITE_API_BASE_URL=http://localhost:1337
+   ```
+
+2. **Install dependencies**:
+
+   ```bash
+   npm install
+   ```
+
+3. **Start development server**:
+
+   ```bash
+   npm run dev
+   ```
+
+   The app will be available at `http://localhost:5173`
+
 ## Development
 
 ```bash
-# Install dependencies
-npm install
-
-# Start development server
-npm run dev
-
 # Run tests
 npm test
 
