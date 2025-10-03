@@ -2,8 +2,8 @@ import { useVirtualizer } from "@tanstack/react-virtual";
 import React, { useLayoutEffect, useMemo, useRef } from "react";
 
 import { layoutConfig } from "@/constants/layout";
-import { calculateGlobalTimeRange } from "@/utils/calculateGlobalTimeRange/calculateGlobalTimeRange";
-import { calculateTimelineWidth } from "@/utils/calculateTimelineWidth/calculateTimelineWidth";
+import { calculateGlobalTimeRange } from "@/utils/time/calculateGlobalTimeRange/calculateGlobalTimeRange";
+import { calculateTimelineWidth } from "@/utils/time/calculateTimelineWidth/calculateTimelineWidth";
 
 import EpgDayHeader from "./header/EpgDayHeader";
 import EpgTimeHeader from "./header/EpgTimeHeader";

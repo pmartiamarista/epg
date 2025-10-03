@@ -8,6 +8,8 @@ A modern, responsive Electronic Program Guide built with React 19 and TypeScript
 
 - **Fixed Time Intervals** - Clean hourly timeline without trailing blank space
 - **Optimized Virtualization** - Horizontal program virtualization with TanStack Virtual
+- **Enhanced Channel Tiles** - Logo with gradient overlay and channel titles
+- **Robust Image Handling** - Automatic fallback to app logo with useReducer state management
 - **Virtualized Channel List** - Smooth scrolling through unlimited channels
 - **Timeline Navigation** - Horizontal scrolling with precise hour intervals
 - **Time Header** - Dynamic hour markers that update with scroll position
@@ -28,6 +30,15 @@ A modern, responsive Electronic Program Guide built with React 19 and TypeScript
 - **Hidden Scrollbars** - Clean interface without visible scrollbars
 - **Hover & Selection Effects** - Interactive feedback with marquee animation triggers
 
+### 🖼️ Image Components
+
+- **Smart Fallback System** - Automatic fallback to app logo when images fail to load
+- **useReducer State Management** - Predictable state transitions for image loading states
+- **Channel Logo Enhancement** - Gradient overlays with channel titles for better recognition
+- **Centered Image Display** - Properly contained logos with aspect ratio preservation
+- **Error Handling** - Graceful handling of network errors, 404s, and loading failures
+- **Accessibility** - Proper alt text and aria-labels for screen readers
+
 ### ⚡ Performance
 
 - **Multi-level Virtualization** - Both channel and program virtualization for unlimited scalability
@@ -45,11 +56,12 @@ A modern, responsive Electronic Program Guide built with React 19 and TypeScript
 - **TanStack Router** - Type-safe file-based routing
 - **TanStack Query** - Powerful server state management
 - **TanStack Virtual** - High-performance virtual scrolling
-- **Tailwind CSS v4** - Utility-first CSS framework
+- **Tailwind CSS v4** - Utility-first CSS framework with gradient overlays
 - **Day.js** - Lightweight date manipulation
 - **Zod** - Runtime type validation
 - **Norigin Spatial Navigation** - TV-style keyboard navigation
 - **Zustand** - Lightweight state management for real-time updates
+- **useReducer** - Predictable state management for complex component states
 
 ## Typography System
 
@@ -231,6 +243,14 @@ The app features a comprehensive design system with:
 
 ## 🔧 Recent Updates
 
+### Image Component Enhancements
+
+- **Smart Image Component** - Built with useReducer for predictable state management
+- **Automatic Fallback System** - Defaults to app logo (`/tv-icon.svg`) when images fail
+- **Enhanced Channel Tiles** - Gradient overlays with channel titles for better recognition
+- **Centered Logo Display** - Properly contained channel logos with aspect ratio preservation
+- **Robust Error Handling** - Graceful handling of network errors and loading failures
+
 ### Timeline Optimization
 
 - **Fixed Time Intervals** - Timeline width now exact to program range (no trailing blank space)
@@ -254,6 +274,7 @@ The app features a comprehensive design system with:
 
 - **Utility Consolidation** - Moved time utilities to consolidated `src/utils/` structure
 - **Enhanced JSDoc** - Comprehensive documentation for all utility functions with realistic examples
+- **useReducer Pattern** - Implemented for complex state management in Image component
 - **Performance Optimization** - Multi-level virtualization and efficient timeline calculations
 - **Unique ID Generation** - Robust ID generation for program data
 - **Schedule Preparation** - Enhanced channel schedule processing with overnight fixes
