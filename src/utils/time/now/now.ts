@@ -28,7 +28,7 @@ import dayjs from "@/constants/dayjs/dayjs";
  * ```
  */
 export const now = (): dayjs.Dayjs => {
-  return dayjs.utc();
+  return dayjs();
 };
 
 export default now;

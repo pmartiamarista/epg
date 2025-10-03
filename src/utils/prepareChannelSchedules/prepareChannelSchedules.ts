@@ -7,10 +7,15 @@ import type { EpgChannel } from "@/types/egp.types";
 /**
  * Prepares channel schedules by fixing overnight programs and generating unique IDs
  *
- * This function processes EPG channel data to:
- * 1. Fix overnight program schedules that span across midnight by adding one day to end times
- * 2. Generate unique IDs for programs (backend data may have dummy IDs)
- * 3. Convert timestamps to milliseconds for consistent handling
+ * This function processes raw EPG channel data to ensure program schedules are
+ * properly formatted and ready for timeline rendering. It handles overnight
+ * programs that span midnight and ensures consistent timestamp format.
+ *
+ * Key transformations:
+ * 1. Fixes overnight programs by adding one day to end times when end < start
+ * 2. Generates unique IDs for programs (replaces backend dummy IDs)
+ * 3. Ensures timestamps are in Unix milliseconds format for consistency
+ * 4. Maintains original program data structure while cleaning up edge cases
  *
  * @param channels - Array of EPG channels with their program schedules
  *
@@ -18,21 +23,19 @@ import type { EpgChannel } from "@/types/egp.types";
  *
  * @example
  * ```typescript
- * const preparedChannels = prepareChannelSchedules([
- *   {
- *     id: "channel1",
- *     title: "Channel 1",
- *     schedules: [
- *       {
- *         id: "dummy-id",
- *         title: "Late Night Show",
- *         start: 1640995200000, // 2022-01-01 00:00:00
- *         end: 1640998800000    // 2022-01-01 01:00:00 (but should be next day)
- *       }
- *     ]
- *   }
- * ]);
- * // Returns: Channels with corrected end times and unique IDs
+ * const rawChannels = [{
+ *   id: "channel1",
+ *   title: "Channel 1",
+ *   schedules: [{
+ *     id: "dummy-id", // Will be replaced with unique ID
+ *     title: "Late Night Show",
+ *     start: 1640995200000, // 2024-01-01 00:00:00
+ *     end: 1640998800000    // 2024-01-01 01:00:00 (overnight, will be corrected)
+ *   }]
+ * }];
+ * 
+ * const preparedChannels = prepareChannelSchedules(rawChannels);
+ * // Returns: Channels with corrected overnight programs and unique IDs
  * ```
  */
 export const prepareChannelSchedules = (
@@ -40,8 +43,8 @@ export const prepareChannelSchedules = (
 ): EpgChannel[] => {
   return channels.map(channel => {
     const correctedSchedules = channel.schedules.map(program => {
-      let endDateTime = dayjs.utc(program.end);
-      const startDateTime = dayjs.utc(program.start);
+      let endDateTime = dayjs(program.end);
+      const startDateTime = dayjs(program.start);
 
       if (endDateTime.isBefore(startDateTime)) {
         endDateTime = endDateTime.add(1, "day");

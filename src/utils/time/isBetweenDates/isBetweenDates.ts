@@ -1,6 +1,6 @@
 import dayjs from "@/constants/dayjs/dayjs";
 
-import { now } from "../now/now";
+import now from "../now/now";
 
 /**
  * Checks if the current time is between a start and end date

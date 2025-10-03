@@ -20,11 +20,12 @@ interface CalculateTimelineWidthParams
 }
 
 /**
- * Calculates the total width needed for the EPG timeline
+ * Calculates the exact timeline width needed for the EPG based on program times
  *
- * This function determines the appropriate width for the timeline based on the
- * time range between the earliest and latest program times. It rounds up to the
- * next hour boundary to ensure a clean, non-cut-off appearance.
+ * This function determines the precise width for the timelines based on the actual
+ * program time range. It rounds start times down to hour boundaries and end times
+ * up to hour boundaries to ensure complete coverage of all programs while avoiding
+ * unnecessary empty space at the end.
  *
  * @param params - Configuration object containing timeline parameters
  * @param params.globalEarliestStart - Unix timestamp of the earliest program start time
@@ -33,18 +34,19 @@ interface CalculateTimelineWidthParams
  * @param params.channelColumnWidth - Width in pixels for the channel column
  * @param params.minWidth - Minimum width in pixels (default: 400)
  *
- * @returns The calculated timeline width in pixels
+ * @returns The calculated timeline width in pixels (includes channel column width)
  *
  * @example
  * ```typescript
+ * // Programs from 08:15 to 22:45
  * const width = calculateTimelineWidth({
- *   globalEarliestStart: 1640995200000, // 2022-01-01 00:00:00
- *   globalLatestEnd: 1641081600000,     // 2022-01-02 00:00:00
- *   hourWidth: 100,
+ *   globalEarliestStart: 1640995200000, // 2022-01-01 08:15:00
+ *   globalLatestEnd: 1641071100000,     // 2022-01-01 22:45:00
+ *   hourWidth: 240,
  *   channelColumnWidth: 200,
- *   minWidth: 400
+ *   minWidth: 1200
  * });
- * // Returns: 1200 (24 hours * 100px + 200px channel column)
+ * // Returns: 3680 (15 hours * 240px + 200px channel column)
  * ```
  */
 export const calculateTimelineWidth = ({
@@ -55,9 +57,11 @@ export const calculateTimelineWidth = ({
   minWidth = 400,
 }: CalculateTimelineWidthParams): number => {
   const startTime = dayjs(globalEarliestStart);
+  const intervalStartTime = startTime.startOf("hour");
   const endTime = dayjs(globalLatestEnd);
-  const totalHours = endTime.diff(startTime, "hour", true);
+  const intervalEndTime = endTime.startOf("hour").add(1, "hour");
 
-  // Use exact hours instead of rounding up to avoid extra empty space
+  const totalHours = intervalEndTime.diff(intervalStartTime, "hour", true);
+
   return Math.max(totalHours * hourWidth + channelColumnWidth, minWidth);
 };

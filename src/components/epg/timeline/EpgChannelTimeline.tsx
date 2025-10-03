@@ -1,55 +1,79 @@
-import { memo } from "react";
+import { useVirtualizer } from "@tanstack/react-virtual";
+import { memo, useMemo, useRef } from "react";
 
 import dayjs from "@/constants/dayjs/dayjs";
 
 import EpgChannelTimelineTile from "./EpgChannelTimelineTile";
 
-import type { GlobalEarliestStart, HourWidth } from "@/types/common.types";
+import type {
+  GlobalEarliestStart,
+  HourWidth,
+  TotalWidth,
+} from "@/types/common.types";
 import type { EpgChannel } from "@/types/egp.types";
 
 interface EpgChannelTimelineProps
   extends Pick<EpgChannel, "schedules">,
+    TotalWidth,
     HourWidth,
     GlobalEarliestStart {}
 
 const EpgChannelTimeline = memo<EpgChannelTimelineProps>(
-  ({ schedules, hourWidth, globalEarliestStart }) => {
-    const latestEnd =
-      schedules.length > 0
-        ? Math.max(...schedules.map(p => dayjs(p.end).valueOf()))
-        : globalEarliestStart;
+  ({ schedules, hourWidth, globalEarliestStart, totalWidth }) => {
+    const containerRef = useRef<HTMLDivElement | null>(null);
 
-    const startTime = dayjs(globalEarliestStart);
-    const endTime = dayjs(latestEnd);
-    const totalMinutes = endTime.diff(startTime, "minute", true);
+    // Calculate program positions with memoization
+    const programList = useMemo(() => {
+      return schedules.map(schedule => {
+        const start = dayjs(schedule.start);
+        const end = dayjs(schedule.end);
 
-    const roundedHours = Math.ceil(totalMinutes / 60);
-    const timelineWidth = Math.max(roundedHours * hourWidth, 200);
+        const offsetMinutes = start.diff(
+          dayjs(globalEarliestStart).startOf("hour"),
+          "minute"
+        );
+        const durationMinutes = end.diff(start, "minute");
+        const pixelWidth = (durationMinutes / 60) * hourWidth;
+
+        const program = {
+          program: schedule,
+          position: (offsetMinutes / 60) * hourWidth,
+          width: pixelWidth,
+        };
+
+        return program;
+      });
+    }, [schedules, globalEarliestStart, hourWidth]);
+
+    // Virtualization setup for programs
+    const programVirtualizer = useVirtualizer({
+      count: programList.length,
+      getScrollElement: () => containerRef.current,
+      estimateSize: index => {
+        const item = programList[index];
+        return item.width;
+      },
+      overscan: programList.length,
+    });
 
     return (
       <div
         className="relative h-full overflow-hidden"
-        style={{ width: timelineWidth }}
+        style={{ width: totalWidth }}
+        ref={containerRef}
       >
-        {schedules.map(program => {
-          const start = dayjs(program.start);
-          const end = dayjs(program.end);
-
-          const offsetMinutes = start.diff(
-            dayjs(globalEarliestStart),
-            "minute"
-          );
-          const durationMinutes = end.diff(start, "minute");
-          const pixelWidth = (durationMinutes / 60) * hourWidth;
+        {programVirtualizer.getVirtualItems().map(virtualItem => {
+          const { program, position, width } = programList[virtualItem.index];
 
           return (
             <EpgChannelTimelineTile
-              key={program.id}
+              key={`${program.id}-${virtualItem.index}`}
               role="button"
               program={program}
               style={{
-                left: (offsetMinutes / 60) * hourWidth,
-                width: pixelWidth,
+                position: "absolute",
+                left: position,
+                width: width,
               }}
               data-program-id={program.id}
             />

@@ -1,6 +1,6 @@
 import dayjs from "@/constants/dayjs/dayjs";
 
-import { now } from "../now/now";
+import now from "../now/now";
 
 /**
  * Checks if a given date is today

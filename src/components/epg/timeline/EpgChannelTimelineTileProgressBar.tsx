@@ -2,7 +2,7 @@ import { type FC, useMemo } from "react";
 
 import useCurrentTime from "@/hooks/useCurrentTime";
 
-import { calculateProgressPercentage } from "@/utils/time/calculateProgressPercentage/calculateProgressPercentage";
+import { calculateProgressPercentage } from "@/utils/calculateProgressPercentage/calculateProgressPercentage";
 
 import type { EpgGridCell } from "@/types/egp.types";
 

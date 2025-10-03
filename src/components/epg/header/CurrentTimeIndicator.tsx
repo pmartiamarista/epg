@@ -2,7 +2,7 @@ import { type FC, useMemo } from "react";
 
 import useCurrentTime from "@/hooks/useCurrentTime";
 
-import { calculateCurrentTimePosition } from "@/utils/time/calculateCurrentTimePosition/calculateCurrentTimePosition";
+import { calculateCurrentTimePosition } from "@/utils/calculateCurrentTimePosition/calculateCurrentTimePosition";
 
 import type { GlobalEarliestStart, HourWidth } from "@/types/common.types";
 

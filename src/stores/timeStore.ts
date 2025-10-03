@@ -1,7 +1,7 @@
 import type { Dayjs } from "dayjs";
 import { create } from "zustand";
 
-import { now } from "@/utils/time/now/now";
+import now from "@/utils/time/now/now";
 
 export interface TimeStoreState {
   currentTime: Dayjs;

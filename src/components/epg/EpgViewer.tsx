@@ -2,8 +2,8 @@ import { useVirtualizer } from "@tanstack/react-virtual";
 import React, { useLayoutEffect, useMemo, useRef } from "react";
 
 import { layoutConfig } from "@/constants/layout";
-import { calculateGlobalTimeRange } from "@/utils/time/calculateGlobalTimeRange/calculateGlobalTimeRange";
-import { calculateTimelineWidth } from "@/utils/time/calculateTimelineWidth/calculateTimelineWidth";
+import { calculateGlobalTimeRange } from "@/utils/calculateGlobalTimeRange/calculateGlobalTimeRange";
+import { calculateTimelineWidth } from "@/utils/calculateTimelineWidth/calculateTimelineWidth";
 
 import EpgDayHeader from "./header/EpgDayHeader";
 import EpgTimeHeader from "./header/EpgTimeHeader";
@@ -39,6 +39,15 @@ const EpgViewer: React.FC<EPGProps> = ({ channels }) => {
     });
   }, [globalEarliestStart, globalLatestEnd]);
 
+  const totalWidth = useMemo(() => {
+    return timelineWidth + layoutConfig.channelColumnWidth;
+  }, [timelineWidth]);
+
+  // Timeline part width (without channel column)
+  const timelinePartWidth = useMemo(() => {
+    return timelineWidth;
+  }, [timelineWidth]);
+
   useLayoutEffect(() => {
     rowVirtualizer.measure();
   }, [rowVirtualizer]);
@@ -63,16 +72,13 @@ const EpgViewer: React.FC<EPGProps> = ({ channels }) => {
         channelColumnWidth={layoutConfig.channelColumnWidth}
         scrollContainerRef={containerRef}
       />
-      <div
-        ref={containerRef}
-        className="flex-1 overflow-auto relative scrollbar-hide"
-      >
+      <div ref={containerRef} className="flex-1 overflow-auto relative ">
         <EpgTimeHeader
           globalEarliestStart={globalEarliestStart}
           globalLatestEnd={globalLatestEnd}
           hourWidth={layoutConfig.hourWidth}
           channelColumnWidth={layoutConfig.channelColumnWidth}
-          totalWidth={timelineWidth + layoutConfig.channelColumnWidth}
+          totalWidth={totalWidth}
           scrollContainerRef={containerRef}
         />
 
@@ -80,7 +86,7 @@ const EpgViewer: React.FC<EPGProps> = ({ channels }) => {
           className="relative"
           style={{
             height: rowVirtualizer.getTotalSize(),
-            width: timelineWidth + layoutConfig.channelColumnWidth,
+            width: totalWidth,
           }}
         >
           {rowVirtualizer.getVirtualItems().map(virtualRow => {
@@ -93,7 +99,7 @@ const EpgViewer: React.FC<EPGProps> = ({ channels }) => {
                 style={{
                   height: virtualRow.size,
                   transform: `translateY(${virtualRow.start}px)`,
-                  width: timelineWidth + layoutConfig.channelColumnWidth,
+                  width: totalWidth,
                 }}
               >
                 <div className="flex h-full">
@@ -102,11 +108,12 @@ const EpgViewer: React.FC<EPGProps> = ({ channels }) => {
                     style={{ width: layoutConfig.channelColumnWidth }}
                     className="z-3 sticky left-0"
                   />
-                  <div className="w-full relative overflow-hidden z-1">
+                  <div className="w-full relative  z-1">
                     <EpgChannelTimeline
                       schedules={channel.schedules}
                       hourWidth={layoutConfig.hourWidth}
                       globalEarliestStart={globalEarliestStart}
+                      totalWidth={timelinePartWidth}
                     />
                   </div>
                 </div>

@@ -4,7 +4,7 @@ import { useScrollPosition } from "@/hooks/useScrollPosition";
 
 import Body from "@/components/typography/body/Body";
 
-import { calculateVisibleHours } from "@/utils/time/calculateVisibleHours/calculateVisibleHours";
+import { calculateVisibleHours } from "@/utils/calculateVisibleHours/calculateVisibleHours";
 
 import CurrentTimeIndicator from "./CurrentTimeIndicator";
 import EpgTimeHeaderIndicator from "./EpgTimeHeaderIndicator";
