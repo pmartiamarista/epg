@@ -1,6 +1,19 @@
 # EPG (Electronic Program Guide) 📺
 
-A modern, responsive Electronic Program Guide built with React 19 and TypeScript, featuring virtualized scrolling, interactive program selection, fixed time intervals, responsive layout system, and a comprehensive design system.
+A modern, responsive Electronic Program Guide built with React 19 and TypeScript for the Norigin Media Frontend Developer Assessment. Features virtualized scrolling, interactive program selection, real-time updates, responsive layout system, and a comprehensive design system.
+
+## 📋 Assessment Requirements Met
+
+✅ **Single Screen EPG Application** - Fully functional Electronic Program Guide  
+✅ **Framework Choice** - React 19 with TypeScript (no generators/starter-kits)  
+✅ **Design Implementation** - Following EPG mockup guidelines  
+✅ **Mock API Integration** - Using provided Mock-Api package for EPG data  
+✅ **Time Progression** - Real-time updates every 30 seconds with live indicators  
+✅ **Current Program Indicator** - Yellow line showing current time position  
+✅ **NOW Button** - Functional auto-scroll to current time with smart centering  
+✅ **Multi-Screen Support** - Responsive design for mobile, tablet, desktop, and 4K displays  
+✅ **Cross-Browser Compatible** - Modern browser support with optimized performance  
+✅ **Production Ready** - Optimized build with code splitting and caching strategies
 
 ## ✨ Features
 
@@ -210,6 +223,19 @@ src/
 
 ## 🧪 Testing
 
+Comprehensive test suite following KISS, DRY, and SOLID principles:
+
+### Test Coverage
+
+- **Button Component** - Variant/size rendering, class merging, ref forwarding
+- **Card Component** - Default/custom classes, ref forwarding
+- **EPG Header Components** - Day/time headers, indicators, current time line
+- **EPG Timeline Components** - Channel tiles, timelines, program tiles, progress bars
+- **EPG Viewer** - Container rendering, scrolling, layout structure
+- **Reusable Mock Factories** - Typed, documented test data generators
+
+### Test Commands
+
 ```bash
 # Run all tests
 npm test
@@ -223,6 +249,14 @@ npm run test -- --watch
 # Run test UI
 npm run test:ui
 ```
+
+### Testing Principles
+
+- **Typed Mocks** - All mock data uses proper TypeScript types
+- **Factory Pattern** - Reusable `createMockProgram`, `createMockSchedules`, `createMockChannel` factories
+- **JSDoc Documentation** - Every mock factory includes comprehensive documentation
+- **Component Analysis** - Tests written after analyzing component structure
+- **SOLID Principles** - DRY, reusable, maintainable test structure
 
 ## 🚀 Performance Optimizations
 
