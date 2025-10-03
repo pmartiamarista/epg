@@ -54,18 +54,9 @@ const EpgViewer: React.FC<EPGProps> = ({ channels }) => {
 
   return (
     <div
-      className="h-screen w-screen flex flex-col text-text-primary font-sans select-none"
+      className="h-full w-full flex flex-col text-text-primary font-sans select-none border border-border-primary rounded-lg"
       aria-label="Electronic Program Guide"
     >
-      <div className="flex items-center justify-between p-4 bg-bg-secondary border-b border-border-primary">
-        <h1 className="text-xl font-bold">EPG Viewer</h1>
-        <NowButton
-          containerRef={containerRef}
-          globalEarliestStart={globalEarliestStart}
-          hourWidth={layoutConfig.hourWidth}
-        />
-      </div>
-
       <EpgDayHeader
         globalEarliestStart={globalEarliestStart}
         hourWidth={layoutConfig.hourWidth}
@@ -122,6 +113,11 @@ const EpgViewer: React.FC<EPGProps> = ({ channels }) => {
           })}
         </div>
       </div>
+      <NowButton
+        containerRef={containerRef}
+        globalEarliestStart={globalEarliestStart}
+        hourWidth={layoutConfig.hourWidth}
+      />
     </div>
   );
 };

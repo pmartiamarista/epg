@@ -1,7 +1,9 @@
+import type { FC } from "react";
+
 import Body from "@/components/typography/body/Body";
 import Heading from "@/components/typography/heading/Heading";
 
-const NotFoundPage = () => {
+const NotFoundPage: FC = () => {
   return (
     <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-surface-600 to-surface-800">
       <div className="text-center space-y-6 p-8">

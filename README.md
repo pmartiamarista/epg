@@ -1,22 +1,23 @@
 # EPG (Electronic Program Guide) 📺
 
-A modern, responsive Electronic Program Guide built with React 19 and TypeScript, featuring virtualized scrolling, interactive program selection, fixed time intervals, and a comprehensive design system.
+A modern, responsive Electronic Program Guide built with React 19 and TypeScript, featuring virtualized scrolling, interactive program selection, fixed time intervals, responsive layout system, and a comprehensive design system.
 
 ## ✨ Features
 
 ### 📺 EPG Viewer
 
+- **Responsive Layout System** - Simple, adaptive margins for mobile, tablet, desktop, and 4K displays
 - **Fixed Time Intervals** - Clean hourly timeline without trailing blank space
 - **Optimized Virtualization** - Horizontal program virtualization with TanStack Virtual
 - **Enhanced Channel Tiles** - Logo with gradient overlay and channel titles
 - **Robust Image Handling** - Automatic fallback to app logo with useReducer state management
 - **Virtualized Channel List** - Smooth scrolling through unlimited channels
 - **Timeline Navigation** - Horizontal scrolling with precise hour intervals
+- **Internal Scrolling** - EPG scrolls within its container, header stays fixed
 - **Time Header** - Dynamic hour markers that update with scroll position
-- **Now Button** - Jump to current time with smart centering
+- **Now Button** - Jump to current time positioned within EPG container
 - **Program Selection** - Click to select programs with visual feedback
 - **Auto-scroll to Selected** - Automatically scrolls to show selected programs
-- **Responsive Design** - Adapts to mobile, tablet, and desktop viewports
 - **Keyboard Navigation** - Full keyboard support with spatial navigation
 - **Real-time Updates** - Live "now playing" indicators and current time line
 - **Current Time Indicator** - Small yellow indicator at timeline bottom
@@ -122,13 +123,23 @@ src/
 │   │   └── timeline/            # Timeline-related components
 │   │       ├── EpgChannelTile.tsx        # Channel information tile
 │   │       ├── EpgChannelTimeline.tsx    # Channel's program timeline
-│   │       ├── EpgChannelTimelineTile.tsx # Individual program tile
-│   │       └── CurrentTimeLine.tsx       # Real-time current time indicator
+│   │       └── EpgChannelTimelineTile.tsx # Individual program tile
+│   ├── layout/                 # Layout components
+│   │   ├── Header.tsx         # Sticky header with navigation
+│   │   ├── MainLayout.tsx     # Main app layout wrapper
+│   │   └── NavButton.tsx      # Reusable navigation button
 │   ├── typography/              # Design system typography
 │   │   ├── body/               # Body text components
 │   │   └── heading/            # Heading components
 │   ├── card/                   # Reusable card component
+│   ├── button/                 # Button components
+│   ├── Image.tsx              # Smart image with fallback
 │   └── examples/               # Design system showcase
+├── pages/                      # Page components
+│   ├── EpgPage.tsx            # EPG viewer page
+│   ├── LoadingPage.tsx        # Loading state page
+│   ├── ErrorPage.tsx          # Error handling page
+│   └── NotFoundPage.tsx       # 404 page
 ├── api/                        # API layer
 │   ├── api-client/            # HTTP client configuration
 │   └── epg-service/           # EPG-specific API services
@@ -243,6 +254,16 @@ The app features a comprehensive design system with:
 
 ## 🔧 Recent Updates
 
+### Responsive Layout System
+
+- **Simple Responsive Margins** - Clean adaptive spacing (mobile: `mx-2`, desktop: `mx-8`, 4K: `mx-16`)
+- **Sticky Header** - Fixed header with navigation that stays visible while content scrolls
+- **Internal EPG Scrolling** - EPG viewer scrolls within its container, not the whole page
+- **NavButton Component** - Reusable navigation button with active state using TanStack Router
+- **LoadingPage Component** - Clean loading state with spinning loader and design system typography
+- **Centered Content** - Proper spacing for all screen sizes without max-width constraints
+- **DRY Navigation** - Simple, maintainable header structure
+
 ### Image Component Enhancements
 
 - **Smart Image Component** - Built with useReducer for predictable state management
@@ -264,11 +285,7 @@ The app features a comprehensive design system with:
 - **Current Time Indicator** - Small yellow indicator at timeline bottom
 - **Dynamic "Now Playing"** - Program tiles update their playing state in real-time
 - **Zustand Integration** - Lightweight state management for time updates
-
-### Enhanced Navigation
-
-- **Keyboard Support** - Full keyboard navigation with spatial navigation
-- **Touch-friendly** - Optimized for mobile touch interactions
+- **Now Button Positioning** - Positioned within EPG container using absolute positioning
 
 ### Code Quality
 
@@ -276,6 +293,6 @@ The app features a comprehensive design system with:
 - **Enhanced JSDoc** - Comprehensive documentation for all utility functions with realistic examples
 - **useReducer Pattern** - Implemented for complex state management in Image component
 - **Performance Optimization** - Multi-level virtualization and efficient timeline calculations
-- **Unique ID Generation** - Robust ID generation for program data
-- **Schedule Preparation** - Enhanced channel schedule processing with overnight fixes
+- **Component Organization** - Clean separation with layout components and reusable buttons
 - **Type Safety** - Improved type definitions and utility function interfaces
+- **KISS & DRY Principles** - Simple, maintainable code following best practices

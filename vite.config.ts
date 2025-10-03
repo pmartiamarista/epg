@@ -48,7 +48,7 @@ export default defineConfig({
           // Validation library
           validation: ["zod"],
           // Utility libraries
-          utils: ["tailwind-merge", "clsx"],
+          utils: ["tailwind-merge", "clsx", "dayjs", "zustand"],
         },
         // Optimize chunk file names for better caching
         chunkFileNames: "assets/[name]-[hash].js",
@@ -99,11 +99,11 @@ export default defineConfig({
       "zod",
       "clsx",
       "tailwind-merge",
+      "dayjs",
+      "zustand",
     ],
     // Exclude from pre-bundling
     exclude: ["@tanstack/react-router-devtools"],
-    // Force optimization for better performance
-    force: true,
     // Optimize esbuild for better performance
     esbuildOptions: {
       target: "esnext",

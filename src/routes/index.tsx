@@ -1,22 +1,11 @@
-import { useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 
-import EpgViewer from "@/components/epg/EpgViewer";
-
-import { epgQueries } from "@/api/epg-service/epg-queries";
-import { prepareChannelSchedules } from "@/utils/prepareChannelSchedules/prepareChannelSchedules";
-
-const EPGPage = () => {
-  const { data } = useSuspenseQuery(epgQueries.getEpgData());
-
-  const channels = prepareChannelSchedules(data);
-
-  return <EpgViewer channels={channels} />;
-};
+import EpgPage from "@/pages/EpgPage";
 
 export const Route = createFileRoute("/")({
-  component: EPGPage,
+  component: EpgPage,
   loader: async ({ context: { queryClient } }) => {
+    const { epgQueries } = await import("@/api/epg-service/epg-queries");
     return queryClient.ensureQueryData(epgQueries.getEpgData());
   },
   head: () => ({

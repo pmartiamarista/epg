@@ -40,7 +40,7 @@ const NowButton: FC<NowButtonProps> = ({
       variant="yellow"
       size="sm"
       onClick={handleScrollToNow}
-      className="fixed bottom-4 right-4 z-10 shadow-lg opacity-60 hover:opacity-100 active:opacity-100 transition-opacity duration-200"
+      className="absolute bottom-4 right-4 z-10 shadow-lg opacity-60 hover:opacity-100 active:opacity-100 transition-opacity duration-200"
     >
       Now
     </Button>
