@@ -1,13 +1,15 @@
 # EPG (Electronic Program Guide) 📺
 
-A modern, responsive Electronic Program Guide built with React 19 and TypeScript, featuring virtualized scrolling, interactive program selection, and a comprehensive design system.
+A modern, responsive Electronic Program Guide built with React 19 and TypeScript, featuring virtualized scrolling, interactive program selection, fixed time intervals, and a comprehensive design system.
 
 ## ✨ Features
 
 ### 📺 EPG Viewer
 
+- **Fixed Time Intervals** - Clean hourly timeline without trailing blank space
+- **Optimized Virtualization** - Horizontal program virtualization with TanStack Virtual
 - **Virtualized Channel List** - Smooth scrolling through unlimited channels
-- **Timeline Navigation** - Horizontal scrolling with hour intervals
+- **Timeline Navigation** - Horizontal scrolling with precise hour intervals
 - **Time Header** - Dynamic hour markers that update with scroll position
 - **Now Button** - Jump to current time with smart centering
 - **Program Selection** - Click to select programs with visual feedback
@@ -15,7 +17,7 @@ A modern, responsive Electronic Program Guide built with React 19 and TypeScript
 - **Responsive Design** - Adapts to mobile, tablet, and desktop viewports
 - **Keyboard Navigation** - Full keyboard support with spatial navigation
 - **Real-time Updates** - Live "now playing" indicators and current time line
-- **Current Time Line** - Moving vertical line showing current time position
+- **Current Time Indicator** - Small yellow indicator at timeline bottom
 
 ### 🎨 Program Tiles
 
@@ -28,7 +30,9 @@ A modern, responsive Electronic Program Guide built with React 19 and TypeScript
 
 ### ⚡ Performance
 
-- **Virtual Scrolling** - Only renders visible channels for optimal performance
+- **Multi-level Virtualization** - Both channel and program virtualization for unlimited scalability
+- **Fixed Time Intervals** - Optimized timeline calculations without unnecessary empty space
+- **Viewport-based Rendering** - Only renders programs currently visible in scroll view
 - **Optimized Animations** - Hardware-accelerated CSS animations
 - **Efficient Re-renders** - Smart memoization and ref usage
 - **Layout Effects** - Synchronous DOM measurements for smooth UX
@@ -119,17 +123,20 @@ src/
 ├── hooks/                      # Custom React hooks
 │   ├── useScrollPosition.ts   # Scroll position tracking
 │   └── useCurrentTime.ts      # Real-time current time access
-├── utils/
-│   ├── time/                   # Time utility functions
-│   │   ├── formatTime/         # Time formatting utilities
-│   │   ├── now/               # Current time helpers
-│   │   ├── isToday/           # Date comparison utilities
-│   │   ├── isBetweenDates/    # Date range checking utilities
-│   │   ├── getCurrentDay/     # Current day calculation
-│   │   ├── calculateTimelineWidth/ # Timeline width calculation
-│   │   └── calculateVisibleHours/ # Visible hour calculation
-│   ├── generateUniqueId/      # Unique ID generation utility
-│   └── prepareChannelSchedules/ # Channel schedule preparation and overnight fix
+├── utils/                      # Consolidated utility functions
+│   ├── calculateTimelineWidth/ # Timeline width calculation (fixed intervals)
+│   ├── calculateVisibleHours/ # Visible hour calculation (viewport-based)
+│   ├── calculateGlobalTimeRange/ # Global time range across all channels
+│   ├── calculateCurrentTimePosition/ # Current time position utilities
+│   ├── calculateProgressPercentage/ # Program progress calculation
+│   ├── generateUniqueId/       # Unique ID generation utility
+│   ├── prepareChannelSchedules/ # Channel schedule preparation and overnight fix
+│   └── time/                  # Time utility functions
+│       ├── formatTime/        # Time formatting utilities
+│       ├── now/              # Current time helpers
+│       ├── isToday/          # Date comparison utilities
+│       ├── isBetweenDates/   # Date range checking utilities
+│       └── getCurrentDay/    # Current day calculation
 ├── styles/                     # Global styles
 │   ├── base.css               # Base styles and animations
 │   ├── colors.css             # Color system
@@ -158,16 +165,17 @@ src/
 
 ### Time Management
 
+- **Fixed Time Intervals** - Clean hourly timeline without extra trailing space
 - **Global Timeline Sync** - All channels share the same time reference
+- **Optimized Width Calculation** - Timeline rounds start down, end up to hour boundaries
 - **Hour Intervals** - Timeline broken into hour segments with dynamic header
-- **Current Time Indicator** - Visual marker showing the current time
-- **Real-time Updates** - Live current time updates every 60 seconds via Zustand store
-- **Moving Time Line** - Vertical line that moves across the timeline in real-time
+- **Current Time Indicator** - Small yellow indicator at timeline bottom
+- **Real-time Updates** - Live current time updates every 30 seconds via Zustand store
 - **Smart Time Calculations** - Accurate program positioning and duration using Day.js
 - **Scroll-responsive Header** - Time markers update based on visible timeline area
 - **Schedule Preparation** - Automatic correction of programs spanning midnight and unique ID generation
-- **Timeline Width Optimization** - Rounds up to hour boundaries for clean appearance
-- **UTC Time Handling** - Consistent timezone handling across all components
+- **Precision Timeline Width** - Exact width based on program range eliminating blank space
+- **Consistent Time Processing** - Unified Day.js handling across all utilities
 
 ### Navigation & Interaction
 
@@ -195,18 +203,20 @@ npm run test:ui
 
 ## 🚀 Performance Optimizations
 
-- **Virtual Scrolling** - Only renders visible channels with TanStack Virtual
+- **Multi-level Virtualization** - TanStack Virtual for both channels and programs
+- **Fixed Time Intervals** - Eliminates unnecessary empty space calculations
+- **Viewport-based Program Rendering** - Only renders programs visible in scroll view
 - **Memoized Components** - Prevents unnecessary re-renders with React.memo
 - **useLayoutEffect** - Synchronous DOM measurements for smooth animations
 - **CSS Animations** - Hardware-accelerated marquee transforms
 - **Ref-based State** - Uses refs instead of useState for animation state
 - **Hidden Scrollbars** - Clean UI without scrollbar performance impact
 - **Efficient Time Calculations** - Cached and memoized Day.js utilities
-- **Timeline Width Caching** - Memoized timeline width calculations
+- **Timeline Width Caching** - Memoized timeline width calculations optimized for exact program range
 - **Scroll Position Tracking** - Optimized scroll event handling with debouncing
-- **Type-safe Utilities** - Comprehensive JSDoc documentation for all utility functions
+- **Enhanced Utility Functions** - Comprehensive JSDoc documentation with improved algorithms
 - **Zustand State Management** - Efficient global state with minimal re-renders
-- **Real-time Updates** - Single timer updates all components simultaneously
+- **Real-time Updates** - Single timer updates all components simultaneously (30 second intervals)
 - **Selective Re-renders** - Only components using current time re-render on updates
 
 ## 🎨 Design System
@@ -221,10 +231,17 @@ The app features a comprehensive design system with:
 
 ## 🔧 Recent Updates
 
+### Timeline Optimization
+
+- **Fixed Time Intervals** - Timeline width now exact to program range (no trailing blank space)
+- **Enhanced Virtualization** - Program-level virtualization with TanStack Virtual
+- **Optimized Calculations** - Timeline width rounds start down, end up to hour boundaries
+- **Viewport-based Rendering** - Only renders programs currently visible in scroll view
+
 ### Real-time Features
 
-- **Live Current Time** - Global time state updates every 60 seconds
-- **Moving Time Line** - Visual indicator that moves across the timeline
+- **Live Current Time** - Global time state updates every 30 seconds
+- **Current Time Indicator** - Small yellow indicator at timeline bottom
 - **Dynamic "Now Playing"** - Program tiles update their playing state in real-time
 - **Zustand Integration** - Lightweight state management for time updates
 
@@ -235,8 +252,9 @@ The app features a comprehensive design system with:
 
 ### Code Quality
 
-- **Type Reuse** - Consistent use of shared types across components
-- **JSDoc Documentation** - Comprehensive documentation for all utility functions
-- **Performance Optimization** - Efficient re-rendering and state management
+- **Utility Consolidation** - Moved time utilities to consolidated `src/utils/` structure
+- **Enhanced JSDoc** - Comprehensive documentation for all utility functions with realistic examples
+- **Performance Optimization** - Multi-level virtualization and efficient timeline calculations
 - **Unique ID Generation** - Robust ID generation for program data
 - **Schedule Preparation** - Enhanced channel schedule processing with overnight fixes
+- **Type Safety** - Improved type definitions and utility function interfaces

@@ -33,7 +33,7 @@ import type { EpgChannel } from "@/types/egp.types";
  *     end: 1640998800000    // 2024-01-01 01:00:00 (overnight, will be corrected)
  *   }]
  * }];
- * 
+ *
  * const preparedChannels = prepareChannelSchedules(rawChannels);
  * // Returns: Channels with corrected overnight programs and unique IDs
  * ```
