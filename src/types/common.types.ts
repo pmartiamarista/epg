@@ -85,9 +85,9 @@ export interface ScrollPosition {
 }
 
 /**
- * Represents the reference to the scroll container of the EPG timeline
- * @property scrollContainerRef - Reference to the scroll container
+ * Represents the reference to the scroll container
+ * @property containerRef - Reference to the scroll container
  */
-export interface ScrollContainerRef {
-  scrollContainerRef: React.RefObject<HTMLDivElement | null>;
+export interface ContainerRef {
+  containerRef: React.RefObject<HTMLDivElement | null>;
 }

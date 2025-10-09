@@ -1,14 +1,13 @@
 import type { Dayjs } from "dayjs";
 
 import dayjs from "@/constants/dayjs/dayjs";
+
+import type { ProgramSchedule } from "@/types/egp.types";
 /**
  * Progress percentage calculation parameters
  */
-interface CalculateProgressPercentageParams {
-  /** Program start time (Unix timestamp in milliseconds) */
-  start: number;
-  /** Program end time (Unix timestamp in milliseconds) */
-  end: number;
+interface CalculateProgressPercentageParams
+  extends Pick<ProgramSchedule, "start" | "end"> {
   /** Current time (optional, defaults to dayjs()) */
   currentTime?: Dayjs;
 }
@@ -48,22 +47,35 @@ export const calculateProgressPercentage = ({
   end,
   currentTime = dayjs(),
 }: CalculateProgressPercentageParams): number => {
+  if (typeof start !== "number" || typeof end !== "number") {
+    return 0;
+  }
+
+  if (start >= end) {
+    return 0;
+  }
+
   const programStart = dayjs(start);
   const programEnd = dayjs(end);
 
-  // If current time is before program start, return 0%
+  if (!programStart.isValid() || !programEnd.isValid()) {
+    return 0;
+  }
+
   if (currentTime.isBefore(programStart)) {
     return 0;
   }
 
-  // If current time is after program end, return 100%
   if (currentTime.isAfter(programEnd)) {
     return 100;
   }
 
-  // Calculate progress percentage within the program
   const totalDuration = programEnd.diff(programStart);
   const elapsed = currentTime.diff(programStart);
+
+  if (totalDuration <= 0) {
+    return 0;
+  }
 
   return Math.max(0, Math.min(100, (elapsed / totalDuration) * 100));
 };

@@ -32,17 +32,42 @@ type GlobalTimeRange = GlobalEarliestStart & GlobalLatestEnd;
 export const calculateGlobalTimeRange = (
   channels: EpgChannel[]
 ): GlobalTimeRange => {
-  let earliest = Infinity;
-  let latest = -Infinity;
+  if (channels.length === 0) {
+    return {
+      globalEarliestStart: 0,
+      globalLatestEnd: 0,
+    };
+  }
+
+  let earliest: number = Number.MAX_SAFE_INTEGER;
+  let latest: number = Number.MIN_SAFE_INTEGER;
 
   for (const channel of channels) {
-    for (const program of channel.schedules) {
-      const start = program.start;
-      const end = program.end;
-
-      earliest = Math.min(earliest, start);
-      latest = Math.max(latest, end);
+    if (!channel.schedules || channel.schedules.length === 0) {
+      continue;
     }
+
+    for (const program of channel.schedules) {
+      if (
+        typeof program.start !== "number" ||
+        typeof program.end !== "number"
+      ) {
+        continue;
+      }
+
+      earliest = Math.min(earliest, program.start);
+      latest = Math.max(latest, program.end);
+    }
+  }
+
+  if (
+    earliest === Number.MAX_SAFE_INTEGER ||
+    latest === Number.MIN_SAFE_INTEGER
+  ) {
+    return {
+      globalEarliestStart: 0,
+      globalLatestEnd: 0,
+    };
   }
 
   return {

@@ -3,6 +3,9 @@ import type { FC } from "react";
 import Body from "@/components/typography/body/Body";
 import Heading from "@/components/typography/heading/Heading";
 
+/**
+ * 404 Not Found page component
+ */
 const NotFoundPage: FC = () => {
   return (
     <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-surface-600 to-surface-800">

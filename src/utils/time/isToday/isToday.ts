@@ -34,6 +34,10 @@ export const isToday = (date: dayjs.ConfigType): boolean => {
   const currentTime = now();
   const targetDate = dayjs(date);
 
+  if (!targetDate.isValid()) {
+    return false;
+  }
+
   return currentTime.isSame(targetDate, "day");
 };
 

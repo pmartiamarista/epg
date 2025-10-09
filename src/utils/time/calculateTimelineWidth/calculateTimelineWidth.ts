@@ -56,12 +56,36 @@ export const calculateTimelineWidth = ({
   channelColumnWidth,
   minWidth = 400,
 }: CalculateTimelineWidthParams): number => {
+  if (
+    typeof globalEarliestStart !== "number" ||
+    typeof globalLatestEnd !== "number"
+  ) {
+    return minWidth;
+  }
+
+  if (typeof hourWidth !== "number" || typeof channelColumnWidth !== "number") {
+    return minWidth;
+  }
+
+  if (hourWidth <= 0 || channelColumnWidth < 0) {
+    return minWidth;
+  }
+
   const startTime = dayjs(globalEarliestStart);
-  const intervalStartTime = startTime.startOf("hour");
   const endTime = dayjs(globalLatestEnd);
+
+  if (!startTime.isValid() || !endTime.isValid()) {
+    return minWidth;
+  }
+
+  const intervalStartTime = startTime.startOf("hour");
   const intervalEndTime = endTime.startOf("hour").add(1, "hour");
 
   const totalHours = intervalEndTime.diff(intervalStartTime, "hour", true);
+
+  if (totalHours <= 0) {
+    return minWidth;
+  }
 
   return Math.max(totalHours * hourWidth + channelColumnWidth, minWidth);
 };

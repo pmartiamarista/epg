@@ -14,7 +14,7 @@ describe("EpgTimeHeader", () => {
         hourWidth={100}
         channelColumnWidth={120}
         totalWidth={1000}
-        scrollContainerRef={mockRef}
+        containerRef={mockRef}
       />
     );
     const header = container.querySelector(".sticky");
@@ -29,7 +29,7 @@ describe("EpgTimeHeader", () => {
         hourWidth={100}
         channelColumnWidth={120}
         totalWidth={1200}
-        scrollContainerRef={mockRef}
+        containerRef={mockRef}
       />
     );
     const header = container.firstChild as HTMLElement;

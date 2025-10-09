@@ -8,14 +8,16 @@ import type { EpgDateTimeHeaderBaseProps } from "@/types/components.type";
 
 type EpgDayHeaderProps = EpgDateTimeHeaderBaseProps;
 
+/**
+ * Day header showing current day based on scroll position
+ * @param globalEarliestStart - Timeline start time
+ * @param containerRef - Scroll container reference
+ * @param channelColumnWidth - Channel column width
+ * @param hourWidth - Width per hour in pixels
+ */
 const EpgDayHeader: FC<EpgDayHeaderProps> = memo(
-  ({
-    globalEarliestStart,
-    scrollContainerRef,
-    channelColumnWidth,
-    hourWidth,
-  }) => {
-    const { scrollLeft } = useScrollPosition(scrollContainerRef);
+  ({ globalEarliestStart, containerRef, channelColumnWidth, hourWidth }) => {
+    const { scrollLeft } = useScrollPosition(containerRef);
 
     const currentDay = useMemo(() => {
       return getCurrentDay({

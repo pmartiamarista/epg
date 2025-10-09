@@ -48,7 +48,27 @@ export const getCurrentDay = ({
   channelColumnWidth,
   hourWidth,
 }: GetCurrentDayConfig): number => {
+  if (
+    typeof globalEarliestStart !== "number" ||
+    typeof scrollLeft !== "number"
+  ) {
+    return Date.now();
+  }
+
+  if (typeof channelColumnWidth !== "number" || typeof hourWidth !== "number") {
+    return Date.now();
+  }
+
+  if (hourWidth <= 0) {
+    return Date.now();
+  }
+
   const startTime = dayjs(globalEarliestStart);
+
+  if (!startTime.isValid()) {
+    return Date.now();
+  }
+
   const startDay = startTime.startOf("day");
 
   const currentDayIndex = Math.max(

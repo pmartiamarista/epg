@@ -10,7 +10,7 @@ describe("EpgDayHeader", () => {
     render(
       <EpgDayHeader
         globalEarliestStart={1609459200000}
-        scrollContainerRef={mockRef}
+        containerRef={mockRef}
         channelColumnWidth={120}
         hourWidth={100}
       />
@@ -22,7 +22,7 @@ describe("EpgDayHeader", () => {
     render(
       <EpgDayHeader
         globalEarliestStart={1609459200000}
-        scrollContainerRef={mockRef}
+        containerRef={mockRef}
         channelColumnWidth={120}
         hourWidth={100}
       />

@@ -6,6 +6,10 @@ interface DayIndicatorProps {
   currentDay: number;
 }
 
+/**
+ * Day indicator showing formatted current day
+ * @param currentDay - Unix timestamp of current day
+ */
 const EpgDayHeaderIndicator: FC<DayIndicatorProps> = memo(({ currentDay }) => {
   return (
     <div className="flex items-center justify-center h-8 bg-bg-secondary border-b border-border-primary">

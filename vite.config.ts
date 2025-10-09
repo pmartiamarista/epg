@@ -4,9 +4,10 @@ import { tanstackRouter } from "@tanstack/router-plugin/vite";
 import react from "@vitejs/plugin-react";
 import path from "path";
 import { defineConfig } from "vite";
+import { analyzer } from "vite-bundle-analyzer";
 
 // https://vite.dev/config/
-export default defineConfig({
+export default defineConfig(({ mode }) => ({
   plugins: [
     react({
       // Optimize JSX runtime
@@ -14,7 +15,13 @@ export default defineConfig({
     }),
     tanstackRouter(),
     tailwindcss(),
-  ],
+    // Bundle analyzer - only in analyze mode
+    mode === "analyze" &&
+      analyzer({
+        analyzerMode: "server",
+        openAnalyzer: true,
+      }),
+  ].filter(Boolean),
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
@@ -29,10 +36,7 @@ export default defineConfig({
     // Aggressive chunk splitting for optimal caching
     rollupOptions: {
       // Externalize dev dependencies in production
-      external: id => {
-        if (process.env.NODE_ENV === "production") {
-          return id.includes("@tanstack/react-router-devtools");
-        }
+      external: () => {
         return false;
       },
       output: {
@@ -46,9 +50,9 @@ export default defineConfig({
           // Virtualization
           virtual: ["@tanstack/react-virtual"],
           // Validation library
-          validation: ["zod"],
+          validation: ["valibot"],
           // Utility libraries
-          utils: ["tailwind-merge", "clsx", "dayjs", "zustand"],
+          utils: ["tailwind-merge", "dayjs", "zustand"],
         },
         // Optimize chunk file names for better caching
         chunkFileNames: "assets/[name]-[hash].js",
@@ -96,14 +100,13 @@ export default defineConfig({
       "@tanstack/react-router",
       "@tanstack/react-query",
       "@tanstack/react-virtual",
-      "zod",
-      "clsx",
+      "valibot",
       "tailwind-merge",
       "dayjs",
       "zustand",
     ],
     // Exclude from pre-bundling
-    exclude: ["@tanstack/react-router-devtools"],
+    exclude: [],
     // Optimize esbuild for better performance
     esbuildOptions: {
       target: "esnext",
@@ -128,4 +131,4 @@ export default defineConfig({
     environment: "jsdom",
     setupFiles: ["./src/test/setup.ts"],
   },
-});
+}));

@@ -7,7 +7,7 @@ import React, {
 } from "react";
 import { twMerge } from "tailwind-merge";
 
-import useCurrentTime from "@/hooks/useCurrentTime";
+import { useIsNowPlaying } from "@/hooks/useIsNowPlaying";
 
 import Body from "@/components/typography/body/Body";
 
@@ -22,11 +22,16 @@ interface EpgChannelTimelineTileProps
   extends React.HTMLAttributes<HTMLDivElement>,
     Pick<EpgGridCell, "program"> {}
 
+/**
+ * Individual program tile in timeline
+ * @param program - Program data with title and times
+ * @param style - Inline styles for positioning
+ * @param className - Additional CSS classes
+ */
 const EpgChannelTimelineTile: FC<EpgChannelTimelineTileProps> = ({
   program,
   style,
   className,
-
   ...props
 }) => {
   const cardRef = useRef<HTMLDivElement>(null);
@@ -36,10 +41,7 @@ const EpgChannelTimelineTile: FC<EpgChannelTimelineTileProps> = ({
   const isTitleOverflowRef = useRef(false);
   const isTimeOverflowRef = useRef(false);
 
-  const currentTime = useCurrentTime();
-
-  const isNowPlaying =
-    currentTime.isAfter(program.start) && currentTime.isBefore(program.end);
+  const isNowPlaying = useIsNowPlaying(program);
 
   const styles = twMerge(
     "h-full",
@@ -51,18 +53,12 @@ const EpgChannelTimelineTile: FC<EpgChannelTimelineTileProps> = ({
     className
   );
 
-  const startTimeFormatted = useMemo(
-    () => formatTime(program.start),
-    [program.start]
-  );
-  const endTimeFormatted = useMemo(
-    () => formatTime(program.end),
-    [program.end]
-  );
+  const startEndTimeFormatted = useMemo(() => {
+    return `${formatTime(program.start)} - ${formatTime(program.end)}`;
+  }, [program.start, program.end]);
 
   const updateAnimation = useCallback(() => {
     const shouldAnimate = isHoveredRef.current && isTitleOverflowRef.current;
-
     if (titleRef.current) {
       titleRef.current.className = twMerge(
         "text-white text-sm font-semibold min-w-0",
@@ -81,7 +77,6 @@ const EpgChannelTimelineTile: FC<EpgChannelTimelineTileProps> = ({
   }, []);
 
   useLayoutEffect(() => {
-    // Check if text overflows container
     const checkOverflow = () => {
       if (titleRef.current) {
         const container = titleRef.current.parentElement;
@@ -105,9 +100,18 @@ const EpgChannelTimelineTile: FC<EpgChannelTimelineTileProps> = ({
     };
 
     checkOverflow();
-    window.addEventListener("resize", checkOverflow);
 
-    return () => window.removeEventListener("resize", checkOverflow);
+    const resizeObserver = new ResizeObserver(() => {
+      checkOverflow();
+    });
+
+    if (cardRef.current) {
+      resizeObserver.observe(cardRef.current);
+    }
+
+    return () => {
+      resizeObserver.disconnect();
+    };
   }, [program.title, updateAnimation]);
 
   return (
@@ -117,6 +121,7 @@ const EpgChannelTimelineTile: FC<EpgChannelTimelineTileProps> = ({
       className={styles}
       role="button"
       aria-label={program.title}
+      aria-describedby={program.title}
       onMouseEnter={() => {
         isHoveredRef.current = true;
         updateAnimation();
@@ -132,9 +137,7 @@ const EpgChannelTimelineTile: FC<EpgChannelTimelineTileProps> = ({
           <Body ref={titleRef}>{program.title}</Body>
         </div>
         <div className="overflow-hidden">
-          <Body ref={timeRef}>
-            {startTimeFormatted} - {endTimeFormatted}
-          </Body>
+          <Body ref={timeRef}>{startEndTimeFormatted}</Body>
         </div>
 
         {isNowPlaying && (

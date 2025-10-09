@@ -7,6 +7,11 @@ interface NavButtonProps {
   children: ReactNode;
 }
 
+/**
+ * Navigation button with active state styling
+ * @param to - Route path
+ * @param children - Button content
+ */
 const NavButton: FC<NavButtonProps> = ({ to, children }) => {
   return (
     <Link to={to} activeOptions={{ exact: true }}>

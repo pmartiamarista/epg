@@ -17,15 +17,24 @@ interface EpgTimeHeaderProps
     TotalWidth,
     GlobalLatestEnd {}
 
+/**
+ * Time header with hour indicators and current time marker
+ * @param globalEarliestStart - Timeline start time
+ * @param globalLatestEnd - Timeline end time
+ * @param hourWidth - Width per hour in pixels
+ * @param channelColumnWidth - Channel column width
+ * @param totalWidth - Total timeline width
+ * @param containerRef - Scroll container reference
+ */
 const EpgTimeHeader: FC<EpgTimeHeaderProps> = ({
   globalEarliestStart,
   globalLatestEnd,
   hourWidth,
   channelColumnWidth,
   totalWidth,
-  scrollContainerRef,
+  containerRef,
 }) => {
-  const { scrollLeft, containerWidth } = useScrollPosition(scrollContainerRef);
+  const { scrollLeft, containerWidth } = useScrollPosition(containerRef);
 
   const visibleHours = useMemo(() => {
     const visibleRange = {

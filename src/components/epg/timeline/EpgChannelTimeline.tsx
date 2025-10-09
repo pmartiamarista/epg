@@ -1,5 +1,4 @@
-import { useVirtualizer } from "@tanstack/react-virtual";
-import { memo, useMemo, useRef } from "react";
+import { memo, useMemo } from "react";
 
 import dayjs from "@/constants/dayjs/dayjs";
 
@@ -18,11 +17,15 @@ interface EpgChannelTimelineProps
     HourWidth,
     GlobalEarliestStart {}
 
+/**
+ * Timeline showing channel programs with positioning
+ * @param schedules - Array of program schedules
+ * @param hourWidth - Width per hour in pixels
+ * @param globalEarliestStart - Timeline start time
+ * @param totalWidth - Total timeline width
+ */
 const EpgChannelTimeline = memo<EpgChannelTimelineProps>(
   ({ schedules, hourWidth, globalEarliestStart, totalWidth }) => {
-    const containerRef = useRef<HTMLDivElement | null>(null);
-
-    // Calculate program positions with memoization
     const programList = useMemo(() => {
       return schedules.map(schedule => {
         const start = dayjs(schedule.start);
@@ -35,53 +38,35 @@ const EpgChannelTimeline = memo<EpgChannelTimelineProps>(
         const durationMinutes = end.diff(start, "minute");
         const pixelWidth = (durationMinutes / 60) * hourWidth;
 
-        const program = {
+        return {
           program: schedule,
           position: (offsetMinutes / 60) * hourWidth,
           width: pixelWidth,
         };
-
-        return program;
       });
     }, [schedules, globalEarliestStart, hourWidth]);
-
-    // Virtualization setup for programs
-    const programVirtualizer = useVirtualizer({
-      count: programList.length,
-      getScrollElement: () => containerRef.current,
-      estimateSize: index => {
-        const item = programList[index];
-        return item.width;
-      },
-      overscan: programList.length,
-    });
 
     return (
       <div
         className="relative h-full overflow-hidden"
         style={{ width: totalWidth }}
-        ref={containerRef}
       >
-        {programVirtualizer.getVirtualItems().map(virtualItem => {
-          const { program, position, width } = programList[virtualItem.index];
-
-          return (
-            <EpgChannelTimelineTile
-              key={`${program.id}-${virtualItem.index}`}
-              role="button"
-              program={program}
-              style={{
-                position: "absolute",
-                left: position,
-                width: width,
-              }}
-              data-program-id={program.id}
-            />
-          );
-        })}
+        {programList.map((item, index) => (
+          <EpgChannelTimelineTile
+            key={`${item.program.id}-${index}`}
+            role="button"
+            program={item.program}
+            style={{
+              position: "absolute",
+              left: item.position,
+              width: item.width,
+            }}
+            data-program-id={item.program.id}
+          />
+        ))}
       </div>
     );
   }
 );
 
-export default memo(EpgChannelTimeline);
+export default EpgChannelTimeline;

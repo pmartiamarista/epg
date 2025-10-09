@@ -37,10 +37,38 @@ export const calculateVisibleHours = (
   hourWidth: number,
   visibleRange: Pick<ProgramSchedule, "start" | "end">
 ): TimeIntervalConfig[] => {
-  // Start from the beginning of the day (00:00) instead of global earliest start
-  const startTime = dayjs(globalEarliestStart).startOf("hour");
+  if (
+    typeof globalEarliestStart !== "number" ||
+    typeof globalLatestEnd !== "number" ||
+    typeof hourWidth !== "number"
+  ) {
+    return [];
+  }
+
+  if (hourWidth <= 0) {
+    return [];
+  }
+
+  if (
+    !visibleRange ||
+    typeof visibleRange.start !== "number" ||
+    typeof visibleRange.end !== "number"
+  ) {
+    return [];
+  }
+
+  const startTime = dayjs(globalEarliestStart);
   const endTime = dayjs(globalLatestEnd);
+
+  if (!startTime.isValid() || !endTime.isValid()) {
+    return [];
+  }
+
   const totalHours = endTime.diff(startTime, "hour", true);
+
+  if (totalHours <= 0) {
+    return [];
+  }
 
   const { start: visibleStart, end: visibleEnd } = visibleRange;
 
@@ -51,8 +79,7 @@ export const calculateVisibleHours = (
   );
   const endIndex = Math.ceil((visibleEnd + padding) / hourWidth);
 
-  // Generate MORE hours to cover a full range - not just visible area
-  const maxHours = Math.max(24, Math.ceil(totalHours)); // At least 24 hours
+  const maxHours = Math.max(24, Math.ceil(totalHours));
   const clampedEndIndex = Math.min(endIndex, maxHours);
 
   const hoursArray: TimeIntervalConfig[] = [];

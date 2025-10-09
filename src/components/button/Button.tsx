@@ -18,6 +18,11 @@ interface ButtonProps
     Partial<SizeGeneric<ButtonSize>>,
     Partial<VariantGeneric<ButtonVariant>> {}
 
+/**
+ * Button component with variant and size support
+ * @param variant - Button style variant (primary, secondary, yellow, green, red, blue)
+ * @param size - Button size (sm, md, lg)
+ */
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   (
     { children, className = "", variant = "primary", size = "md", ...props },

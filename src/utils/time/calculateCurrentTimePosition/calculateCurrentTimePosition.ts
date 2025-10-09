@@ -47,13 +47,32 @@ export const calculateCurrentTimePosition = ({
   hourWidth,
   currentTime = dayjs(),
 }: CalculateCurrentTimePositionParams): number => {
+  if (
+    typeof globalEarliestStart !== "number" ||
+    typeof hourWidth !== "number"
+  ) {
+    return 0;
+  }
+
+  if (hourWidth <= 0) {
+    return 0;
+  }
+
   const timelineStart = dayjs(globalEarliestStart);
 
-  // If current time is before timeline start, return 0
+  if (!timelineStart.isValid()) {
+    return 0;
+  }
+
   if (currentTime.isBefore(timelineStart)) {
     return 0;
   }
 
   const elapsedMinutes = currentTime.diff(timelineStart, "minute");
+
+  if (elapsedMinutes < 0) {
+    return 0;
+  }
+
   return (elapsedMinutes / 60) * hourWidth;
 };
