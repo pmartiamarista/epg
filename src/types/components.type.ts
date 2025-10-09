@@ -1,12 +1,17 @@
 import type {
   ChannelColumnWidth,
+  ContainerRef,
   GlobalEarliestStart,
   HourWidth,
   RowHeight,
-  ScrollContainerRef,
 } from "./common.types";
 
-export type LayoutConfig = HourWidth & RowHeight & ChannelColumnWidth;
+export type LayoutConfig = HourWidth &
+  RowHeight &
+  ChannelColumnWidth & {
+    overscan: number;
+    updateInterval: number;
+  };
 
 export type LayoutConfigByDevice = {
   mobile: LayoutConfig;
@@ -17,4 +22,4 @@ export type LayoutConfigByDevice = {
 export type EpgDateTimeHeaderBaseProps = HourWidth &
   ChannelColumnWidth &
   GlobalEarliestStart &
-  ScrollContainerRef;
+  ContainerRef;

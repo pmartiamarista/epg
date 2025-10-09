@@ -1,16 +1,24 @@
-import React, { type FC, memo, useCallback } from "react";
+import { type FC, memo, useCallback } from "react";
 
 import Button from "@/components/button/Button";
 
 import dayjs from "@/constants/dayjs/dayjs";
 import now from "@/utils/time/now/now";
 
-import type { GlobalEarliestStart, HourWidth } from "@/types/common.types";
+import type {
+  ContainerRef,
+  GlobalEarliestStart,
+  HourWidth,
+} from "@/types/common.types";
 
-interface NowButtonProps extends GlobalEarliestStart, HourWidth {
-  containerRef: React.RefObject<HTMLDivElement | null>;
-}
+interface NowButtonProps extends GlobalEarliestStart, HourWidth, ContainerRef {}
 
+/**
+ * Button to scroll EPG to current time
+ * @param containerRef - Scroll container reference
+ * @param globalEarliestStart - Timeline start time
+ * @param hourWidth - Width per hour in pixels
+ */
 const NowButton: FC<NowButtonProps> = ({
   containerRef,
   globalEarliestStart,

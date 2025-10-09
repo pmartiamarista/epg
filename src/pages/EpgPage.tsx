@@ -5,6 +5,9 @@ import EpgViewer from "@/components/epg/EpgViewer";
 import { epgQueries } from "@/api/epg-service/epg-queries";
 import { prepareChannelSchedules } from "@/utils/prepareChannelSchedules/prepareChannelSchedules";
 
+/**
+ * Main EPG page component
+ */
 const EpgPage = () => {
   const { data } = useSuspenseQuery(epgQueries.getEpgData());
   const channels = prepareChannelSchedules(data);

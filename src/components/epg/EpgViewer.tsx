@@ -1,5 +1,5 @@
 import { useVirtualizer } from "@tanstack/react-virtual";
-import React, { useLayoutEffect, useMemo, useRef } from "react";
+import React, { useMemo, useRef } from "react";
 
 import { layoutConfig } from "@/constants/layout";
 import { calculateGlobalTimeRange } from "@/utils/time/calculateGlobalTimeRange/calculateGlobalTimeRange";
@@ -15,6 +15,10 @@ import type { EpgChannel } from "@/types/egp.types";
 
 type EPGProps = { channels: EpgChannel[] };
 
+/**
+ * Main EPG viewer component with virtualized channels
+ * @param channels - Array of EPG channels with schedules
+ */
 const EpgViewer: React.FC<EPGProps> = ({ channels }) => {
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -22,7 +26,7 @@ const EpgViewer: React.FC<EPGProps> = ({ channels }) => {
     count: channels.length,
     getScrollElement: () => containerRef.current,
     estimateSize: () => layoutConfig.rowHeight,
-    overscan: 4,
+    overscan: layoutConfig.overscan,
   });
 
   const { globalEarliestStart, globalLatestEnd } = useMemo(
@@ -43,25 +47,17 @@ const EpgViewer: React.FC<EPGProps> = ({ channels }) => {
     return timelineWidth + layoutConfig.channelColumnWidth;
   }, [timelineWidth]);
 
-  // Timeline part width (without channel column)
-  const timelinePartWidth = useMemo(() => {
-    return timelineWidth;
-  }, [timelineWidth]);
-
-  useLayoutEffect(() => {
-    rowVirtualizer.measure();
-  }, [rowVirtualizer]);
-
   return (
     <div
       className="h-full w-full flex flex-col text-text-primary font-sans select-none border border-border-primary rounded-lg"
       aria-label="Electronic Program Guide"
+      role="grid"
     >
       <EpgDayHeader
         globalEarliestStart={globalEarliestStart}
         hourWidth={layoutConfig.hourWidth}
         channelColumnWidth={layoutConfig.channelColumnWidth}
-        scrollContainerRef={containerRef}
+        containerRef={containerRef}
       />
       <div ref={containerRef} className="flex-1 overflow-auto relative ">
         <EpgTimeHeader
@@ -70,7 +66,7 @@ const EpgViewer: React.FC<EPGProps> = ({ channels }) => {
           hourWidth={layoutConfig.hourWidth}
           channelColumnWidth={layoutConfig.channelColumnWidth}
           totalWidth={totalWidth}
-          scrollContainerRef={containerRef}
+          containerRef={containerRef}
         />
 
         <div
@@ -104,7 +100,7 @@ const EpgViewer: React.FC<EPGProps> = ({ channels }) => {
                       schedules={channel.schedules}
                       hourWidth={layoutConfig.hourWidth}
                       globalEarliestStart={globalEarliestStart}
-                      totalWidth={timelinePartWidth}
+                      totalWidth={timelineWidth}
                     />
                   </div>
                 </div>

@@ -38,6 +38,14 @@ export const isBetweenDates = (
   const start = dayjs(startDate);
   const end = dayjs(endDate);
 
+  if (!start.isValid() || !end.isValid()) {
+    return false;
+  }
+
+  if (start.isAfter(end)) {
+    return false;
+  }
+
   return currentTime.isAfter(start) && currentTime.isBefore(end);
 };
 

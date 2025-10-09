@@ -12,6 +12,11 @@ interface EpgChannelTileProps
   extends React.HTMLAttributes<HTMLDivElement>,
     Pick<EpgGridCell, "channel"> {}
 
+/**
+ * Channel tile showing channel logo and name
+ * @param channel - Channel data with logo and name
+ * @param className - Additional CSS classes
+ */
 const EpgChannelTile: FC<EpgChannelTileProps> = ({
   channel,
   className,

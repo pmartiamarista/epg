@@ -3,6 +3,9 @@ import { type FC } from "react";
 
 import NavButton from "./NavButton";
 
+/**
+ * Header component with logo and navigation
+ */
 const Header: FC = () => {
   return (
     <header className="bg-bg-secondary border-b border-border-primary sticky top-0 z-50">

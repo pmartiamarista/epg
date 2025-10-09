@@ -2,6 +2,9 @@ import { type FC } from "react";
 
 import Body from "@/components/typography/body/Body";
 
+/**
+ * Loading page component with spinner
+ */
 const LoadingPage: FC = () => {
   return (
     <div className="flex items-center justify-center h-screen">

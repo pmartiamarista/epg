@@ -41,10 +41,38 @@ import type { EpgChannel } from "@/types/egp.types";
 export const prepareChannelSchedules = (
   channels: EpgChannel[]
 ): EpgChannel[] => {
+  if (!Array.isArray(channels)) {
+    return [];
+  }
+
   return channels.map(channel => {
+    if (!channel || !Array.isArray(channel.schedules)) {
+      return {
+        ...channel,
+        schedules: [],
+      };
+    }
+
     const correctedSchedules = channel.schedules.map(program => {
+      if (!program) {
+        return {
+          id: generateUniqueId(),
+          title: "",
+          start: Date.now(),
+          end: Date.now(),
+        };
+      }
+
       let endDateTime = dayjs(program.end);
       const startDateTime = dayjs(program.start);
+
+      if (!startDateTime.isValid()) {
+        endDateTime = dayjs();
+      }
+
+      if (!endDateTime.isValid()) {
+        endDateTime = startDateTime.add(1, "hour");
+      }
 
       if (endDateTime.isBefore(startDateTime)) {
         endDateTime = endDateTime.add(1, "day");
@@ -52,7 +80,6 @@ export const prepareChannelSchedules = (
 
       return {
         ...program,
-        // Add a unique id to the program, backend data has dummy ids
         id: generateUniqueId(),
         start: startDateTime.toDate().getTime(),
         end: endDateTime.toDate().getTime(),

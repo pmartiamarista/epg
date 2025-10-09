@@ -3,6 +3,10 @@ import { twMerge } from "tailwind-merge";
 
 type CardProps = React.HTMLAttributes<HTMLDivElement>;
 
+/**
+ * Card component with default styling
+ * @param className - Additional CSS classes
+ */
 const Card = React.forwardRef<HTMLDivElement, CardProps>(
   ({ children, className = "", ...props }, ref) => {
     const styles = twMerge("bg-bg-secondary p-4", className);
