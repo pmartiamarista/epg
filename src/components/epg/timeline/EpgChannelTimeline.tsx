@@ -1,6 +1,5 @@
+import { differenceInMinutes, startOfHour } from "date-fns";
 import { memo, useMemo } from "react";
-
-import dayjs from "@/constants/dayjs/dayjs";
 
 import EpgChannelTimelineTile from "./EpgChannelTimelineTile";
 
@@ -18,7 +17,7 @@ interface EpgChannelTimelineProps
     GlobalEarliestStart {}
 
 /**
- * Timeline showing channel programs with positioning
+ * Timeline showing channel programs with positioning using date-fns
  * @param schedules - Array of program schedules
  * @param hourWidth - Width per hour in pixels
  * @param globalEarliestStart - Timeline start time
@@ -28,14 +27,12 @@ const EpgChannelTimeline = memo<EpgChannelTimelineProps>(
   ({ schedules, hourWidth, globalEarliestStart, totalWidth }) => {
     const programList = useMemo(() => {
       return schedules.map(schedule => {
-        const start = dayjs(schedule.start);
-        const end = dayjs(schedule.end);
+        const start = new Date(schedule.start);
+        const end = new Date(schedule.end);
 
-        const offsetMinutes = start.diff(
-          dayjs(globalEarliestStart).startOf("hour"),
-          "minute"
-        );
-        const durationMinutes = end.diff(start, "minute");
+        const timelineStart = startOfHour(new Date(globalEarliestStart));
+        const offsetMinutes = differenceInMinutes(start, timelineStart);
+        const durationMinutes = differenceInMinutes(end, start);
         const pixelWidth = (durationMinutes / 60) * hourWidth;
 
         return {

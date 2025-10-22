@@ -1,0 +1,247 @@
+# React EPG Project - Cursor Rules
+
+## Project Overview
+This is a React-based Electronic Program Guide (EPG) application built with modern web technologies. The project uses TypeScript, Tailwind CSS v4, TanStack Router, TanStack Query, Zustand for state management, and Vitest for testing.
+
+## Tech Stack & Architecture
+- **Frontend**: React 19.1.1 with TypeScript 5.8.3
+- **Routing**: TanStack Router v1.132.19
+- **State Management**: Zustand v5.0.8
+- **Data Fetching**: TanStack Query v5.90.2
+- **Styling**: Tailwind CSS v4.0.0 with custom CSS modules
+- **Build Tool**: Vite v7.1.7
+- **Testing**: Vitest v3.2.4 with Testing Library
+- **Validation**: Valibot v1.1.0
+- **Date Handling**: Date-fns v3.6.0
+- **Virtualization**: TanStack Virtual v3.13.12
+
+## Code Style & Conventions
+
+### TypeScript
+- Use strict TypeScript with explicit types
+- Prefer interfaces over types for object shapes
+- Use generic types for reusable components (`SizeGeneric`, `VariantGeneric`)
+- Always define return types for functions
+- Use JSDoc comments for complex functions and public APIs
+- Prefer `type` for unions and `interface` for objects
+- Use `as const` for literal types when needed
+
+### React Components
+- Use functional components with hooks
+- Prefer `React.FC<Props>` type annotation for components
+- Use `React.forwardRef` for components that need ref forwarding
+- Always destructure props with default values
+- Use meaningful prop names and provide JSDoc comments
+- Prefer composition over inheritance
+- Use `useMemo` and `useCallback` for performance optimization when needed
+
+### File Organization
+- Follow the established folder structure:
+  - `src/components/` - Reusable UI components
+  - `src/pages/` - Page-level components
+  - `src/api/` - API services and queries
+  - `src/stores/` - Zustand state stores
+  - `src/utils/` - Utility functions
+  - `src/types/` - TypeScript type definitions
+  - `src/constants/` - Application constants
+  - `src/hooks/` - Custom React hooks
+  - `src/styles/` - CSS and styling files
+  - `src/test/` - Test utilities and mocks
+
+### Naming Conventions
+- **Components**: PascalCase (e.g., `EpgViewer`, `Button`)
+- **Files**: PascalCase for components, camelCase for utilities
+- **Variables/Functions**: camelCase
+- **Constants**: camelCase (e.g., `layoutConfig`)
+- **Types/Interfaces**: PascalCase (e.g., `EpgChannel`, `ProgramSchedule`)
+- **CSS Classes**: kebab-case with Tailwind utilities
+- **Test Files**: `.test.tsx` suffix
+
+### Import Organization
+Follow the ESLint import sorting rules:
+1. External libraries (`react`, `dayjs`, etc.)
+2. CSS imports
+3. Internal utilities (`@/lib`, `@/hooks`)
+4. Data layer (`@/data`)
+5. Components (`@/components`)
+6. Store imports (`@/store`)
+7. Root-level imports (`@/`)
+8. Relative imports (`./`, `../`)
+9. Type imports (`@/types`)
+10. Other imports
+
+### Component Structure
+```typescript
+// 1. External imports
+import React from "react";
+import { useMemo } from "react";
+
+// 2. Internal imports
+import { layoutConfig } from "@/constants/layout";
+import { calculateTimelineWidth } from "@/utils/time/calculateTimelineWidth/calculateTimelineWidth";
+
+// 3. Component imports
+import EpgDayHeader from "./header/EpgDayHeader";
+
+// 4. Type imports
+import type { EpgChannel } from "@/types/egp.types";
+
+// 5. Component definition with JSDoc
+/**
+ * Main EPG viewer component with virtualized channels
+ * @param channels - Array of EPG channels with schedules
+ */
+const EpgViewer: React.FC<EPGProps> = ({ channels }) => {
+  // Component logic
+};
+
+export default EpgViewer;
+```
+
+## EPG-Specific Patterns
+
+### Time Handling
+- Use Date-fns for all date/time operations (2-6x performance improvement over Day.js)
+- Store timestamps as Unix milliseconds
+- Use the centralized `now()` utility for current time
+- Calculate time positions using utility functions in `src/utils/time/`
+- Use `GlobalEarliestStart` and `HourWidth` types for timeline calculations
+- Import specific Date-fns functions for tree-shaking optimization
+
+### Virtualization
+- Use TanStack Virtual for large lists (channels, programs)
+- Always provide `estimateSize` and `overscan` configuration
+- Use `getVirtualItems()` for rendering virtual items
+- Implement proper key props for virtual items
+
+### State Management
+- Use Zustand for global state (time store)
+- Use TanStack Query for server state
+- Keep component state local when possible
+- Use selectors for derived state
+
+### API Integration
+- Use the centralized `apiClientInstance` for all API calls
+- Implement service classes for different API endpoints
+- Use TanStack Query hooks for data fetching
+- Always handle loading and error states
+
+### Styling Guidelines
+- Use Tailwind CSS v4 with custom CSS modules
+- Follow the established color system (`text-primary`, `bg-primary`, etc.)
+- Use `twMerge` for conditional styling
+- Implement responsive design with mobile-first approach
+- Use CSS custom properties for theme values
+
+### Testing Patterns
+- Write tests for all components using Vitest and Testing Library
+- Use mock data from `src/test/mocks/`
+- Test accessibility with `aria-label` and `role` attributes
+- Test component behavior, not implementation details
+- Use descriptive test names and group related tests with `describe`
+
+### Performance Optimization
+- Use `useMemo` for expensive calculations
+- Use `useCallback` for event handlers passed to child components
+- Implement proper virtualization for large datasets
+- Use code splitting with dynamic imports when appropriate
+- Optimize bundle size with proper chunk splitting
+
+## Code Quality Rules
+
+### Error Handling
+- Always handle API errors gracefully
+- Use proper TypeScript error types
+- Implement fallback UI for error states
+- Log errors appropriately (avoid console.log in production)
+
+### Accessibility
+- Always provide `aria-label` for interactive elements
+- Use semantic HTML elements (`role="grid"` for EPG)
+- Ensure keyboard navigation works
+- Provide proper focus management
+- Use descriptive text for screen readers
+
+### Security
+- Validate all user inputs with Valibot
+- Sanitize data before rendering
+- Use proper CORS configuration
+- Avoid XSS vulnerabilities
+
+### Performance
+- Lazy load components when appropriate
+- Use proper memoization strategies
+- Optimize re-renders with proper dependency arrays
+- Monitor bundle size and performance metrics
+
+## Development Workflow
+
+### Before Committing
+- Run `yarn dev:check` to ensure code quality
+- Ensure all tests pass with `yarn test:run`
+- Check TypeScript compilation with `yarn typecheck`
+- Verify ESLint rules with `yarn lint`
+- Format code with `yarn format`
+
+### Code Review Checklist
+- [ ] TypeScript types are properly defined
+- [ ] Components have proper JSDoc comments
+- [ ] Tests cover the new functionality
+- [ ] Accessibility requirements are met
+- [ ] Performance implications are considered
+- [ ] Error handling is implemented
+- [ ] Code follows project conventions
+
+## Common Patterns
+
+### EPG Timeline Calculations
+```typescript
+const timelineWidth = useMemo(() => {
+  return calculateTimelineWidth({
+    globalEarliestStart,
+    globalLatestEnd,
+    hourWidth: layoutConfig.hourWidth,
+    channelColumnWidth: layoutConfig.channelColumnWidth,
+  });
+}, [globalEarliestStart, globalLatestEnd]);
+```
+
+### Virtualized Lists
+```typescript
+const rowVirtualizer = useVirtualizer({
+  count: channels.length,
+  getScrollElement: () => containerRef.current,
+  estimateSize: () => layoutConfig.rowHeight,
+  overscan: layoutConfig.overscan,
+});
+```
+
+### API Service Pattern
+```typescript
+export class EpgService {
+  private readonly basePath = "/epg";
+
+  async getEpgData(): Promise<ApiResponse<EpgResponse>> {
+    return await apiClientInstance.get<EpgResponse>(this.basePath);
+  }
+}
+```
+
+### Component with Props
+```typescript
+interface ComponentProps {
+  /** Description of the prop */
+  propName: string;
+  /** Optional prop with default */
+  optionalProp?: boolean;
+}
+
+const Component: React.FC<ComponentProps> = ({ 
+  propName, 
+  optionalProp = false 
+}) => {
+  // Component implementation
+};
+```
+
+Remember: This is an EPG application focused on displaying TV program schedules. Always consider the user experience of browsing through channels and programs, ensure smooth scrolling and navigation, and maintain good performance with large datasets.

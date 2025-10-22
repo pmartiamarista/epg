@@ -1,3 +1,4 @@
+import { addHours } from "date-fns";
 import { type FC, memo, useMemo } from "react";
 import { twMerge } from "tailwind-merge";
 
@@ -5,7 +6,6 @@ import { useIsNowPlaying } from "@/hooks/useIsNowPlaying";
 
 import Body from "@/components/typography/body/Body";
 
-import dayjs from "@/constants/dayjs/dayjs";
 import { formatTime } from "@/utils/time/formatTime/formatTime";
 
 import type { TimeIntervalConfig } from "@/types/common.types";
@@ -15,7 +15,7 @@ interface EpgTimeHeaderIndicatorProps extends TimeIntervalConfig {
 }
 
 /**
- * Individual hour indicator in time header
+ * Individual hour indicator in time header using date-fns
  * @param time - Hour time
  * @param left - Left position in pixels
  * @param width - Width in pixels
@@ -27,7 +27,7 @@ const EpgTimeHeaderIndicator: FC<EpgTimeHeaderIndicatorProps> = ({
 }) => {
   const isNowPlaying = useIsNowPlaying({
     start: time.getTime(),
-    end: dayjs(time).add(1, "hour").toDate().getTime(),
+    end: addHours(time, 1).getTime(),
   });
 
   const containerClassName = useMemo(() => {

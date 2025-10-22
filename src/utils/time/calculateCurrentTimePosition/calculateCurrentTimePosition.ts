@@ -1,6 +1,4 @@
-import type { Dayjs } from "dayjs";
-
-import dayjs from "@/constants/dayjs/dayjs";
+import { differenceInMinutes, isValid } from "date-fns";
 
 import type { GlobalEarliestStart, HourWidth } from "@/types/common.types";
 
@@ -10,12 +8,12 @@ import type { GlobalEarliestStart, HourWidth } from "@/types/common.types";
 interface CalculateCurrentTimePositionParams
   extends GlobalEarliestStart,
     HourWidth {
-  /** Current time (optional, defaults to dayjs()) */
-  currentTime?: Dayjs;
+  /** Current time (optional, defaults to new Date()) */
+  currentTime?: Date;
 }
 
 /**
- * Calculates the horizontal pixel position of the current time within a timeline
+ * Calculates the horizontal pixel position of the current time within a timeline using date-fns
  *
  * This function determines where the current time falls horizontally within the EPG
  * timeline based on the global timeline start time and the configured hour width.
@@ -45,7 +43,7 @@ interface CalculateCurrentTimePositionParams
 export const calculateCurrentTimePosition = ({
   globalEarliestStart,
   hourWidth,
-  currentTime = dayjs(),
+  currentTime = new Date(),
 }: CalculateCurrentTimePositionParams): number => {
   if (
     typeof globalEarliestStart !== "number" ||
@@ -58,17 +56,17 @@ export const calculateCurrentTimePosition = ({
     return 0;
   }
 
-  const timelineStart = dayjs(globalEarliestStart);
+  const timelineStart = new Date(globalEarliestStart);
 
-  if (!timelineStart.isValid()) {
+  if (!isValid(timelineStart)) {
     return 0;
   }
 
-  if (currentTime.isBefore(timelineStart)) {
+  if (currentTime < timelineStart) {
     return 0;
   }
 
-  const elapsedMinutes = currentTime.diff(timelineStart, "minute");
+  const elapsedMinutes = differenceInMinutes(currentTime, timelineStart);
 
   if (elapsedMinutes < 0) {
     return 0;

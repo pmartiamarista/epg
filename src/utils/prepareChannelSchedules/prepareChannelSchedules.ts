@@ -1,11 +1,11 @@
-import dayjs from "dayjs";
+import { addDays, addHours, isBefore, isValid } from "date-fns";
 
 import { generateUniqueId } from "@/utils/generateUniqueId/generateUniqueId";
 
 import type { EpgChannel } from "@/types/egp.types";
 
 /**
- * Prepares channel schedules by fixing overnight programs and generating unique IDs
+ * Prepares channel schedules by fixing overnight programs and generating unique IDs using date-fns
  *
  * This function processes raw EPG channel data to ensure program schedules are
  * properly formatted and ready for timeline rendering. It handles overnight
@@ -63,26 +63,26 @@ export const prepareChannelSchedules = (
         };
       }
 
-      let endDateTime = dayjs(program.end);
-      const startDateTime = dayjs(program.start);
+      let endDateTime = new Date(program.end);
+      const startDateTime = new Date(program.start);
 
-      if (!startDateTime.isValid()) {
-        endDateTime = dayjs();
+      if (!isValid(startDateTime)) {
+        endDateTime = new Date();
       }
 
-      if (!endDateTime.isValid()) {
-        endDateTime = startDateTime.add(1, "hour");
+      if (!isValid(endDateTime)) {
+        endDateTime = addHours(startDateTime, 1);
       }
 
-      if (endDateTime.isBefore(startDateTime)) {
-        endDateTime = endDateTime.add(1, "day");
+      if (isBefore(endDateTime, startDateTime)) {
+        endDateTime = addDays(endDateTime, 1);
       }
 
       return {
         ...program,
         id: generateUniqueId(),
-        start: startDateTime.toDate().getTime(),
-        end: endDateTime.toDate().getTime(),
+        start: startDateTime.getTime(),
+        end: endDateTime.getTime(),
       };
     });
 

@@ -1,4 +1,4 @@
-import dayjs from "@/constants/dayjs/dayjs";
+import { isSameDay, isValid, parseISO } from "date-fns";
 
 import now from "../now/now";
 
@@ -9,7 +9,7 @@ import now from "../now/now";
  * It's useful for highlighting today's programs or applying special styling to
  * current day entries in the EPG.
  *
- * @param date - The date to check (string, Date, or dayjs object)
+ * @param date - The date to check (string, Date, or number)
  *
  * @returns Boolean indicating if the date is today
  *
@@ -30,15 +30,23 @@ import now from "../now/now";
  * // Returns: true if the program is scheduled for today
  * ```
  */
-export const isToday = (date: dayjs.ConfigType): boolean => {
+export const isToday = (date: string | Date | number): boolean => {
   const currentTime = now();
-  const targetDate = dayjs(date);
+  let targetDate: Date;
 
-  if (!targetDate.isValid()) {
+  if (typeof date === "string") {
+    targetDate = parseISO(date);
+  } else if (typeof date === "number") {
+    targetDate = new Date(date);
+  } else {
+    targetDate = date;
+  }
+
+  if (!isValid(targetDate)) {
     return false;
   }
 
-  return currentTime.isSame(targetDate, "day");
+  return isSameDay(currentTime, targetDate);
 };
 
 export default isToday;

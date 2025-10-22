@@ -1,4 +1,4 @@
-import dayjs from "@/constants/dayjs/dayjs";
+import { addHours, differenceInHours, isValid } from "date-fns";
 
 import type { TimeIntervalConfig } from "@/types/common.types";
 import type { ProgramSchedule } from "@/types/egp.types";
@@ -57,14 +57,14 @@ export const calculateVisibleHours = (
     return [];
   }
 
-  const startTime = dayjs(globalEarliestStart);
-  const endTime = dayjs(globalLatestEnd);
+  const startTime = new Date(globalEarliestStart);
+  const endTime = new Date(globalLatestEnd);
 
-  if (!startTime.isValid() || !endTime.isValid()) {
+  if (!isValid(startTime) || !isValid(endTime)) {
     return [];
   }
 
-  const totalHours = endTime.diff(startTime, "hour", true);
+  const totalHours = differenceInHours(endTime, startTime);
 
   if (totalHours <= 0) {
     return [];
@@ -85,7 +85,7 @@ export const calculateVisibleHours = (
   const hoursArray: TimeIntervalConfig[] = [];
 
   for (let i = startIndex; i < clampedEndIndex; i++) {
-    const hourTime = startTime.add(i, "hour").toDate();
+    const hourTime = addHours(startTime, i);
     hoursArray.push({
       time: hourTime,
       left: i * hourWidth,
