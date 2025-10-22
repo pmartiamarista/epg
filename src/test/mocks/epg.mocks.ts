@@ -1,3 +1,5 @@
+import { addHours } from "date-fns";
+
 import type { EpgChannel, ProgramSchedule } from "@/types/egp.types";
 
 /**
@@ -18,19 +20,26 @@ export const createMockProgram = (
 
 /**
  * Creates an array of mock program schedules for testing
+ * Generates schedules spanning 48 hours before and after current time
  *
- * @param count - Number of mock programs to create
+ * @param count - Number of mock programs to create (default: 48 programs = 48 hours)
  * @returns Array of mock ProgramSchedule objects with sequential test data
  */
-export const createMockSchedules = (count: number = 2): ProgramSchedule[] => {
-  return Array.from({ length: count }, (_, i) =>
-    createMockProgram({
+export const createMockSchedules = (count: number = 48): ProgramSchedule[] => {
+  const now = new Date();
+  const startTime = addHours(now, -24); // Start 24 hours ago
+
+  return Array.from({ length: count }, (_, i) => {
+    const programStart = addHours(startTime, i);
+    const programEnd = addHours(programStart, 1); // Each program is 1 hour long
+
+    return createMockProgram({
       id: `program-${i + 1}`,
       title: `Test Program ${i + 1}`,
-      start: 1609459200000 + i * 3600000,
-      end: 1609462800000 + i * 3600000,
-    })
-  );
+      start: programStart.getTime(),
+      end: programEnd.getTime(),
+    });
+  });
 };
 
 /**

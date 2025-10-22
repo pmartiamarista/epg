@@ -1,19 +1,18 @@
-import type { Dayjs } from "dayjs";
-
-import dayjs from "@/constants/dayjs/dayjs";
+import { differenceInMilliseconds, isAfter, isBefore, isValid } from "date-fns";
 
 import type { ProgramSchedule } from "@/types/egp.types";
+
 /**
  * Progress percentage calculation parameters
  */
 interface CalculateProgressPercentageParams
   extends Pick<ProgramSchedule, "start" | "end"> {
-  /** Current time (optional, defaults to dayjs()) */
-  currentTime?: Dayjs;
+  /** Current time (optional, defaults to new Date()) */
+  currentTime?: Date;
 }
 
 /**
- * Calculates the progress percentage of a program based on current time
+ * Calculates the progress percentage of a program based on current time using date-fns
  *
  * This function determines what percentage of a program has elapsed since
  * its start time. Returns 0% if program hasn't started, 100% if program
@@ -45,7 +44,7 @@ interface CalculateProgressPercentageParams
 export const calculateProgressPercentage = ({
   start,
   end,
-  currentTime = dayjs(),
+  currentTime = new Date(),
 }: CalculateProgressPercentageParams): number => {
   if (typeof start !== "number" || typeof end !== "number") {
     return 0;
@@ -55,23 +54,23 @@ export const calculateProgressPercentage = ({
     return 0;
   }
 
-  const programStart = dayjs(start);
-  const programEnd = dayjs(end);
+  const programStart = new Date(start);
+  const programEnd = new Date(end);
 
-  if (!programStart.isValid() || !programEnd.isValid()) {
+  if (!isValid(programStart) || !isValid(programEnd)) {
     return 0;
   }
 
-  if (currentTime.isBefore(programStart)) {
+  if (isBefore(currentTime, programStart)) {
     return 0;
   }
 
-  if (currentTime.isAfter(programEnd)) {
+  if (isAfter(currentTime, programEnd)) {
     return 100;
   }
 
-  const totalDuration = programEnd.diff(programStart);
-  const elapsed = currentTime.diff(programStart);
+  const totalDuration = differenceInMilliseconds(programEnd, programStart);
+  const elapsed = differenceInMilliseconds(currentTime, programStart);
 
   if (totalDuration <= 0) {
     return 0;

@@ -14,7 +14,7 @@ const EpgDayHeaderIndicator: FC<DayIndicatorProps> = memo(({ currentDay }) => {
   return (
     <div className="flex items-center justify-center h-8 bg-bg-secondary border-b border-border-primary">
       <span className="text-text-primary text-sm font-medium">
-        {formatTime(currentDay, "ddd, DD MMM")}
+        {formatTime(currentDay, "EEE, dd MMM")}
       </span>
     </div>
   );

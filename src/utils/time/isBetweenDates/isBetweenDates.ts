@@ -1,4 +1,4 @@
-import dayjs from "@/constants/dayjs/dayjs";
+import { isAfter, isBefore, isValid, parseISO } from "date-fns";
 
 import now from "../now/now";
 
@@ -9,8 +9,8 @@ import now from "../now/now";
  * or if the current time falls within a specific time range. It's useful for
  * highlighting "now playing" programs in the EPG.
  *
- * @param startDate - The start date (string, Date, or dayjs object)
- * @param endDate - The end date (string, Date, or dayjs object)
+ * @param startDate - The start date (string, Date, or number)
+ * @param endDate - The end date (string, Date, or number)
  *
  * @returns Boolean indicating if the current time is within the interval
  *
@@ -31,22 +31,41 @@ import now from "../now/now";
  * ```
  */
 export const isBetweenDates = (
-  startDate: dayjs.ConfigType,
-  endDate: dayjs.ConfigType
+  startDate: string | Date | number,
+  endDate: string | Date | number
 ): boolean => {
   const currentTime = now();
-  const start = dayjs(startDate);
-  const end = dayjs(endDate);
 
-  if (!start.isValid() || !end.isValid()) {
+  let start: Date;
+  let end: Date;
+
+  // Parse start date
+  if (typeof startDate === "string") {
+    start = parseISO(startDate);
+  } else if (typeof startDate === "number") {
+    start = new Date(startDate);
+  } else {
+    start = startDate;
+  }
+
+  // Parse end date
+  if (typeof endDate === "string") {
+    end = parseISO(endDate);
+  } else if (typeof endDate === "number") {
+    end = new Date(endDate);
+  } else {
+    end = endDate;
+  }
+
+  if (!isValid(start) || !isValid(end)) {
     return false;
   }
 
-  if (start.isAfter(end)) {
+  if (isAfter(start, end)) {
     return false;
   }
 
-  return currentTime.isAfter(start) && currentTime.isBefore(end);
+  return isAfter(currentTime, start) && isBefore(currentTime, end);
 };
 
 export default isBetweenDates;

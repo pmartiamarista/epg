@@ -52,7 +52,7 @@ export default defineConfig(({ mode }) => ({
           // Validation library
           validation: ["valibot"],
           // Utility libraries
-          utils: ["tailwind-merge", "dayjs", "zustand"],
+          utils: ["tailwind-merge", "date-fns", "zustand"],
         },
         // Optimize chunk file names for better caching
         chunkFileNames: "assets/[name]-[hash].js",
@@ -102,7 +102,7 @@ export default defineConfig(({ mode }) => ({
       "@tanstack/react-virtual",
       "valibot",
       "tailwind-merge",
-      "dayjs",
+      "date-fns",
       "zustand",
     ],
     // Exclude from pre-bundling

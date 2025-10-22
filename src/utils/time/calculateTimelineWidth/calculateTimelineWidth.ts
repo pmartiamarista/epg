@@ -1,4 +1,4 @@
-import dayjs from "@/constants/dayjs/dayjs";
+import { addHours, differenceInHours, isValid, startOfHour } from "date-fns";
 
 import type {
   ChannelColumnWidth,
@@ -20,7 +20,7 @@ interface CalculateTimelineWidthParams
 }
 
 /**
- * Calculates the exact timeline width needed for the EPG based on program times
+ * Calculates the exact timeline width needed for the EPG based on program times using date-fns
  *
  * This function determines the precise width for the timelines based on the actual
  * program time range. It rounds start times down to hour boundaries and end times
@@ -71,17 +71,17 @@ export const calculateTimelineWidth = ({
     return minWidth;
   }
 
-  const startTime = dayjs(globalEarliestStart);
-  const endTime = dayjs(globalLatestEnd);
+  const startTime = new Date(globalEarliestStart);
+  const endTime = new Date(globalLatestEnd);
 
-  if (!startTime.isValid() || !endTime.isValid()) {
+  if (!isValid(startTime) || !isValid(endTime)) {
     return minWidth;
   }
 
-  const intervalStartTime = startTime.startOf("hour");
-  const intervalEndTime = endTime.startOf("hour").add(1, "hour");
+  const intervalStartTime = startOfHour(startTime);
+  const intervalEndTime = addHours(startOfHour(endTime), 1);
 
-  const totalHours = intervalEndTime.diff(intervalStartTime, "hour", true);
+  const totalHours = differenceInHours(intervalEndTime, intervalStartTime);
 
   if (totalHours <= 0) {
     return minWidth;

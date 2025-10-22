@@ -1,8 +1,8 @@
+import { differenceInHours } from "date-fns";
 import { type FC, memo, useCallback } from "react";
 
 import Button from "@/components/button/Button";
 
-import dayjs from "@/constants/dayjs/dayjs";
 import now from "@/utils/time/now/now";
 
 import type {
@@ -14,7 +14,7 @@ import type {
 interface NowButtonProps extends GlobalEarliestStart, HourWidth, ContainerRef {}
 
 /**
- * Button to scroll EPG to current time
+ * Button to scroll EPG to current time using date-fns
  * @param containerRef - Scroll container reference
  * @param globalEarliestStart - Timeline start time
  * @param hourWidth - Width per hour in pixels
@@ -28,11 +28,8 @@ const NowButton: FC<NowButtonProps> = ({
     if (!containerRef.current) return;
 
     const nowTime = now();
-    const hoursFromStart = nowTime.diff(
-      dayjs(globalEarliestStart),
-      "hour",
-      true
-    );
+    const timelineStart = new Date(globalEarliestStart);
+    const hoursFromStart = differenceInHours(nowTime, timelineStart);
     const scrollLeft = hoursFromStart * hourWidth;
     const containerWidth = containerRef.current.clientWidth;
     const centeredScrollLeft = scrollLeft - containerWidth / 2 + 96; // channelColumnWidth

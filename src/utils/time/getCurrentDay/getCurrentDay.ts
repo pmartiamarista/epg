@@ -1,4 +1,4 @@
-import dayjs from "dayjs";
+import { addDays, isValid, startOfDay } from "date-fns";
 
 import type {
   ChannelColumnWidth,
@@ -17,7 +17,7 @@ interface GetCurrentDayConfig
     Pick<ScrollPosition, "scrollLeft"> {}
 
 /**
- * Calculates which day is currently visible in the EPG timeline based on scroll position
+ * Calculates which day is currently visible in the EPG timeline based on scroll position using date-fns
  *
  * This function determines which day should be displayed in the day header based on
  * the current horizontal scroll position. It accounts for the channel column width
@@ -63,19 +63,19 @@ export const getCurrentDay = ({
     return Date.now();
   }
 
-  const startTime = dayjs(globalEarliestStart);
+  const startTime = new Date(globalEarliestStart);
 
-  if (!startTime.isValid()) {
+  if (!isValid(startTime)) {
     return Date.now();
   }
 
-  const startDay = startTime.startOf("day");
+  const startDay = startOfDay(startTime);
 
   const currentDayIndex = Math.max(
     0,
     Math.floor((scrollLeft - channelColumnWidth) / (hourWidth * 24))
   );
-  const currentDay = startDay.add(currentDayIndex, "day");
+  const currentDay = addDays(startDay, currentDayIndex);
 
-  return currentDay.valueOf();
+  return currentDay.getTime();
 };
